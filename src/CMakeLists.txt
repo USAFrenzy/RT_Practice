@@ -1,17 +1,19 @@
 set(PROJECT_NAME RMRT)
 message("-- Building ${PROJECT_NAME}")
 
+set(RMRT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+
 # Individual Groups Of Files
 set(RMRT_HEADERS
-
+    "${RMRT_INCLUDE_DIR}/RMRT/Raytracer.h"
 )
 
 set(RMRT_SOURCES 
-
+    "Raytracer.cpp"
 )
 
 source_group(
-    TREE "${CMAKE_CURRENT_SOURCE_DIR}/../include/"
+    TREE "${RMRT_INCLUDE_DIR}/RMRT"
     PREFIX "Header Files"
     FILES ${RMRT_HEADERS}
 )
@@ -25,6 +27,8 @@ source_group(
 set(RMRT_ALL_FILES ${RMRT_SOURCES} ${RMRT_HEADERS})
 
 add_library(${PROJECT_NAME} ${RMRT_ALL_FILES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${RMRT_INCLUDE_DIR})
 
 set(STANDARD 20)
 
