@@ -29,7 +29,7 @@ namespace rmrt {
 	*                                            \    /
 	*                                             \  /
 	*                                              \/
-	*                                              ----------------------- x
+	*                                              --------------- x
 	*   2) To find the final length value given vector points, we plot the points on the graph
 	*   3) We have the height of the vector triangle as our 'z' axis and the width of our vector triangle as our 'x' or 'y' axis
 	*   4) To solve for the hypotenuse, our vector legnth, we need to first find the base value of our vector triangle
@@ -39,10 +39,12 @@ namespace rmrt {
 	*   8) The formula then becomes:
 	*                _____________________________________________
 	*     Length =   | (    _____________  )^2
-	*              v |(   v\    x^2 + y2   )     +     (z^2)        , where the first half with the squared square-root  cancels out and we're left with : 
-	 *   
-	 *               ____________________________
-	 *   Length =   v\ (x^2) + (y^2 )+ (z^2)
+	*              v |(   v|    x^2 + y2   )    +   (z^2)           , 
+	*     where the first half with the squared square-root  cancels out and we're left with : 
+	*   
+	* 
+	*               ____________________________
+	*   Length =   v| (x^2) + (y^2 )+ (z^2)
 	* 
 	*********************************************************************************************************************************/
 	double vec3::length() const
