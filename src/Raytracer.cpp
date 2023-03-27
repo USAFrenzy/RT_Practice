@@ -146,8 +146,8 @@ namespace rmrt {
 	*     | a2  b2  c2  |
 	*  2) We then find the determinates by taking each component multiplied by its respective 2D matrix by x-multiplying 
 	*     (subtracting the second term from the first) each 2D matrix by the corresponding 3D component factor:
-	*     (  |  b1  c1  |        )      (  a1  c1  |         )     (  |  a1  b1  |  )         ) 
-	*     (  |  b2  c2  |  * i   )   -  (  a2  c2  |   *  j  )  -  (  |  a2  b2  |  )   *  k  )   ---->
+	*     (  |  b1  c1  |        )      (  |  a1  c1  |         )     (  |  a1  b1  |  )         ) 
+	*     (  |  b2  c2  |  * i   )   -  (  |  a2  c2  |   *  j  )  +  (  |  a2  b2  |  )   *  k  )   ---->
 	*     a  x  b  =  ((( b1*c2)-(c1*b2) )* i) - ((( a1*c2)-(c1*a2) )* j)  + ((( a1*b2)-(b1*a2) )* k)  
 	*************************************************************************************************************************/
 	vec3 cross(const vec3& u, const vec3& v)
