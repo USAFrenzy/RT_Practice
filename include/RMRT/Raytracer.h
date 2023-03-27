@@ -1,7 +1,10 @@
 #pragma once
 
+#include <ostream>
 
 namespace rmrt {
+
+	constexpr auto rgb_factor{ 255.999 };
 
 	class vec3 {
 	public:
@@ -21,9 +24,27 @@ namespace rmrt {
 		vec3& operator*=(const double t);
 		vec3& operator/=(const double t);
 
+
 	public:
 		double e[3];
 	};
 	using point3 = vec3;
 	using color = vec3;
+
+	// The utility functions for vec3
+	std::ostream& operator<<(std::ostream& out, const vec3& v);
+	vec3 operator+(const vec3 &u, const vec3& v);
+	vec3 operator-(const vec3& u, const vec3& v);
+	vec3 operator*(const vec3& u, const vec3& v);
+	vec3 operator*(double t, const vec3& v);
+	vec3 operator*(const vec3& v, double t);
+	vec3 operator/(vec3 v, double t);
+
+	// Scalar
+	double dot(const vec3& u, const vec3& v);
+
+	vec3 cross(const vec3&u, const vec3& v);
+	vec3 unit_vector(vec3 v);
+
+	void write_color(std::ostream& out, color pixel_color);
 }
