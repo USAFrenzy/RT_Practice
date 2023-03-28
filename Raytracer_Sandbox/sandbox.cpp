@@ -23,7 +23,7 @@ int main()
 		std::cerr << "\rScanlines Remaining: " << i << ' ' << std::flush;
 
 		for (auto j{ 0 }; j < img_width; ++j) {
-			rmrt::color pixelColor {static_cast<double>(j)/cWidth, static_cast<double>(j)/cHeight, b};
+			rmrt::color pixelColor {static_cast<double>(j)/cWidth, static_cast<double>(i)/cHeight, b};
 			rmrt::write_color(std::cout, pixelColor);
 		}
 	}
