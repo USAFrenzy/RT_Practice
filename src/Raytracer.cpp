@@ -149,6 +149,7 @@ namespace rmrt {
 	*     (  |  b1  c1  |        )      (  |  a1  c1  |         )     (  |  a1  b1  |  )         ) 
 	*     (  |  b2  c2  |  * i   )   -  (  |  a2  c2  |   *  j  )  +  (  |  a2  b2  |  )   *  k  )   ---->
 	*     a  x  b  =  ((( b1*c2)-(c1*b2) )* i) - ((( a1*c2)-(c1*a2) )* j)  + ((( a1*b2)-(b1*a2) )* k)  
+	*  3) The only difference here, is that instead of the full calculation, we are just creating and returning a vec3 object with the computed values.
 	*************************************************************************************************************************/
 	vec3 cross(const vec3& u, const vec3& v)
 	{
