@@ -5,11 +5,13 @@ set(RMRT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
 # Individual Groups Of Files
 set(RMRT_HEADERS
-    "${RMRT_INCLUDE_DIR}/RMRT/Raytracer.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Vec3.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Ray.h"
 )
 
 set(RMRT_SOURCES 
-    "Raytracer.cpp"
+    "Vec3.cpp"
+    "Ray.cpp"
 )
 
 source_group(

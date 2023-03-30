@@ -1,5 +1,5 @@
 
-#include <RMRT/Raytracer.h>
+#include <RMRT/Vec3.h>
 
 #include <iostream>
 
