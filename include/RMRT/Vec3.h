@@ -10,11 +10,11 @@ namespace rmrt {
 	public:
 		Vec3() :e{ 0,0,0 } {}
 		Vec3(double e0, double e1, double e2) :e{ e0, e1, e2 } {}
-		double x() const;
-		double y() const;
-		double z() const;
-		double length() const;
-		double length_squared() const;
+		double X() const;
+		double Y() const;
+		double Z() const;
+		double Length() const;
+		double LengthSquared() const;
 
 		// operator overloads
 		Vec3 operator-() const;
@@ -43,10 +43,10 @@ namespace rmrt {
 	Vec3 operator/(Vec3 v, double t);
 
 	// Scalar
-	double dot(const Vec3& u, const Vec3& v);
+	double Dot(const Vec3& u, const Vec3& v);
 
-	Vec3 cross(const Vec3& u, const Vec3& v);
-	Vec3 unit_vector(Vec3 v);
+	Vec3 Cross(const Vec3& u, const Vec3& v);
+	Vec3 UnitVector(Vec3 v);
 
-	void write_color(std::ostream& out, color pixel_color);
+	void WriteColor(std::ostream& out, color pixel_color);
 }

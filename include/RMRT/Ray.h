@@ -9,8 +9,9 @@ namespace rmrt {
 		Ray() {}
 		Ray(const point3& origin, const Vec3& direction);
 
-		point3 origin() const;
-		Vec3 direction () const;
+		point3 Origin() const;
+		Vec3 Direction () const;
+		color RayColor(const Ray& ray);
 
 	private:
 		point3 m_origin;

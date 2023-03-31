@@ -5,17 +5,17 @@
 
 namespace rmrt {
 
-	double Vec3::x() const
+	double Vec3::X() const
 	{
 		return e[0];
 	}
 
-	double Vec3::y() const
+	double Vec3::Y() const
 	{
 		return e[1];
 	}
 
-	double Vec3::z() const
+	double Vec3::Z() const
 	{
 		return e[2];
 	}
@@ -46,12 +46,12 @@ namespace rmrt {
 	*   Length =   v| (x^2) + (y^2 )+ (z^2)
 	*
 	*********************************************************************************************************************************/
-	double Vec3::length() const
+	double Vec3::Length() const
 	{
-		return std::sqrt(length_squared());
+		return std::sqrt(LengthSquared());
 	}
 
-	double Vec3::length_squared() const
+	double Vec3::LengthSquared() const
 	{
 		return (e[0] * e[0]) + (e[1] * e[1]) + (e[2] * e[2]);
 	}
@@ -129,7 +129,7 @@ namespace rmrt {
 	}
 
 	// Scalar
-	double dot(const Vec3& u, const Vec3& v)
+	double Dot(const Vec3& u, const Vec3& v)
 	{
 		return (u.e[0] * v.e[0]) + (u.e[1] * v.e[1]) + (u.e[2] * v.e[2]);
 	}
@@ -151,7 +151,7 @@ namespace rmrt {
 	*     a  x  b  =  ((( b1*c2)-(c1*b2) )* i) - ((( a1*c2)-(c1*a2) )* j)  + ((( a1*b2)-(b1*a2) )* k)  
 	*  3) The only difference here, is that instead of the full calculation, we are just creating and returning a Vec3 object with the computed values.
 	*************************************************************************************************************************/
-	Vec3 cross(const Vec3& u, const Vec3& v)
+	Vec3 Cross(const Vec3& u, const Vec3& v)
 	{
 		return Vec3(
 			((u.e[1] * v.e[2]) - (u.e[2] * v.e[1])),
@@ -160,16 +160,16 @@ namespace rmrt {
 		);
 	}
 
-	Vec3 unit_vector(Vec3 v)
+	Vec3  UnitVector(Vec3 v)
 	{
-		return v / v.length();
+		return v / v.Length();
 	}
-	void write_color(std::ostream& out, color pixel_color)
+	void WriteColor(std::ostream& out, color pixel_color)
 	{
 		// This basically does what the initial code in the 2.1 module of 'Raytracing In One Weekend' accomplished, 
 		// except it now uses the ostream class to write to the console (This is from module 3.3)
-		out << static_cast<int>(rgb_factor * pixel_color.x()) << ' ' 
-			  << static_cast<int>(rgb_factor * pixel_color.y()) << ' ' 
-			  << static_cast<int>(rgb_factor * pixel_color.z()) << '\n';
+		out << static_cast<int>(rgb_factor * pixel_color.X()) << ' ' 
+			  << static_cast<int>(rgb_factor * pixel_color.Y()) << ' ' 
+			  << static_cast<int>(rgb_factor * pixel_color.Z()) << '\n';
 	}
 }
