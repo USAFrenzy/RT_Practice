@@ -16,7 +16,7 @@ int main()
 	auto viewportWidth{ viewportHeight * aspectRatio };
 	auto focalLength{ 1.0 };
 
-	auto origin{ rmrt::point3(0,0,0) };
+	auto origin{ rmrt::Point3(0,0,0) };
 	auto horizontal{ rmrt::Vec3(viewportWidth, 0,0) };
 	auto vertical{ rmrt::Vec3(0,viewportHeight, 0) };
 	auto lowerLeftCorner{ (origin - horizontal / 2) - (vertical / 2) - rmrt::Vec3(0,0,focalLength) };
@@ -41,7 +41,7 @@ int main()
 			auto rayDirection{ (u * horizontal) + (v * vertical) - origin };
 
 			rmrt::Ray ray{ origin, lowerLeftCorner + rayDirection };
-			rmrt::color pixelColor{ ray.RayColor(ray) };
+			rmrt::Color pixelColor{ ray.RayColor(ray) };
 			rmrt::WriteColor(std::cout, pixelColor);
 		}
 	}

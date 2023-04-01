@@ -7,14 +7,15 @@ namespace rmrt {
 	class Ray {
 	public:
 		Ray() {}
-		Ray(const point3& origin, const Vec3& direction);
+		Ray(const Point3& origin, const Vec3& direction);
 
-		point3 Origin() const;
+		Point3 Origin() const;
 		Vec3 Direction () const;
-		color RayColor(const Ray& ray);
-
+		Color RayColor(const Ray& ray);
+		bool SphereHit(const Point3& center, double radius, const Ray& r);
+			
 	private:
-		point3 m_origin;
+		Point3 m_origin;
 		Vec3 m_direction;
 	};
 }

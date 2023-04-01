@@ -164,12 +164,12 @@ namespace rmrt {
 	{
 		return v / v.Length();
 	}
-	void WriteColor(std::ostream& out, color pixel_color)
+	void WriteColor(std::ostream& out, Color pixelColor)
 	{
 		// This basically does what the initial code in the 2.1 module of 'Raytracing In One Weekend' accomplished, 
 		// except it now uses the ostream class to write to the console (This is from module 3.3)
-		out << static_cast<int>(rgb_factor * pixel_color.X()) << ' ' 
-			  << static_cast<int>(rgb_factor * pixel_color.Y()) << ' ' 
-			  << static_cast<int>(rgb_factor * pixel_color.Z()) << '\n';
+		out << static_cast<int>(rgb_factor * pixelColor.X()) << ' ' 
+			  << static_cast<int>(rgb_factor * pixelColor.Y()) << ' ' 
+			  << static_cast<int>(rgb_factor * pixelColor.Z()) << '\n';
 	}
 }
