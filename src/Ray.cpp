@@ -19,18 +19,21 @@ namespace rmrt {
 		return m_direction;
 	}
 
+	Point3 Ray::At(double t) const
+	{
+		return m_origin + (t * m_direction);
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Temp usage for readability for module 4.2's RayColor() function
 	enum class TempColor {
 		white,
 		blue,
-		red
 	};
 	static  std::unordered_map<TempColor, Color>  colorMap =
 	{
 		{ TempColor::white, Color(1.0, 1.0, 1.0) },
 		{TempColor::blue, Color(0.5, 0.7, 1.0)},
-		{TempColor::red, Color(1, 0 , 0)},
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,12 +51,16 @@ namespace rmrt {
 	{
 		// From module 5.2, we are hard-coding the sphere center, radius, and color produced when the ray hits the sphere;
 		// In actual code, this would most likely be dynamic in the form of input paramaters and attributes instead.
-		if (SphereHit(Point3(0, 0, -1), 0.5, ray)) {
-			return colorMap[TempColor::red];
+		// Module 6 added a condition on shading the sphere if the ray hits it by normalizing the vector point |_ to the sphere.
+		if (auto t{ SphereHit(Point3(0, 0, -1), 0.5, ray) };  t > 0.0) {
+			Vec3 n{ UnitVector(ray.At(t) - Vec3(0,0,-1)) };
+			return 0.5 * Color(n.X() + 1, n.Y() + 1, n.Z() + 1);
 		}
-		Vec3 unitDirection{ UnitVector(ray.Direction()) };
-		auto t{ 0.5 * (unitDirection.Y() + 1.0) };
-		return ((1.0 - t) * colorMap[TempColor::white]) + (t * colorMap[TempColor::blue]);
+		else {
+			Vec3 unitDirection{ UnitVector(ray.Direction()) };
+			t = 0.5 * (unitDirection.Y() + 1.0);
+			return ((1.0 - t) * colorMap[TempColor::white]) + (t * colorMap[TempColor::blue]);
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,16 +88,18 @@ namespace rmrt {
 	// 5b) If the discriminant is < 0, there are no solutions, meaning no intersections
 	// 5c) If the discriminant == 0, there is exactly one solution, meaning there is exactly one intersection, the tangent.   
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool Ray::SphereHit(const Point3& center, double radius, const Ray& r)
+	double Ray::SphereHit(const Point3& center, double radius, const Ray& ray)
 	{
-		Vec3 originCenter{ r.Origin() - center };
-		auto a{ Dot(r.Direction(), r.Direction()) }; 
-		auto b{ 2.0 * Dot(originCenter, r.Direction()) };
-		auto c{ Dot(originCenter, originCenter) - (radius * radius) };
-		auto discriminant{ b * b - 4 * a * c };
-		// Only thing I'm unsure of is why we don't do 'discriminant >= 0"  or " discriminant < 0" here.
-		// Shouldn't we want  to know if the ray is tangent to the sphere too? Is this related to critical points?
-		return (discriminant < 0);
+		Vec3 originCenter{ ray.Origin() - center };
+		// Both 'a' and 'c' were simplified in module 6.2 due to the vector attribute that states: 
+		// A vector dot with itself  == length^2 of that vector
+		// 'b' was simplified due to '2' cancelling out ==> discriminant and return check was simplified as well
+		auto a{ ray.Direction().LengthSquared() };
+		auto bHalf{ Dot(originCenter, ray.Direction()) };
+		auto c{ originCenter.LengthSquared() - (radius * radius) };
+		auto discriminant{ bHalf * bHalf - (a * c) };
+		// My note from last commit was addressed in module 6 based on normalizing the vectors for shading
+		return discriminant < 0 ? -1.0 : ((-bHalf - std::sqrt(discriminant)) / a);
 	}
 
 }
