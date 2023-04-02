@@ -7,7 +7,7 @@
 
 namespace rmrt {
 
-	class HittableList
+	class HittableList :public HittableObject
 	{
 	public:
 		using HittableObjectList = std::vector<std::shared_ptr<HittableObject>>;
@@ -19,6 +19,7 @@ namespace rmrt {
 		void Clear();
 		void Store(std::shared_ptr<HittableObject> object);
 		virtual bool Hit(const Ray& ray, double tmin, double tMax, HitRecord& record) const;
+		Color RayColor(const Ray& ray, const HittableObject& worldObject);
 
 	private:
 		HittableObjectList m_objects;

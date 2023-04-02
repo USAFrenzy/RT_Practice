@@ -1,5 +1,7 @@
 
-#include <RMRT/Ray.h>
+#include <RMRT/RMRT.h>
+#include <RMRT/Objects/HittableList.h>
+#include <RMRT/Objects/Sphere.h>
 
 #include <iostream>
 
@@ -10,6 +12,12 @@ int main()
 	constexpr auto aspectRatio{ 16.0 / 9.0 };  // 16:9
 	constexpr int imgWidth{ 400 };
 	constexpr int imgHeight{ static_cast<int>(imgWidth / aspectRatio) };
+
+	// World
+	rmrt::HittableList world;
+	world.Store(std::make_shared<rmrt::Sphere>(rmrt::Point3(0, 0, -1), 0.5));
+	world.Store(std::make_shared<rmrt::Sphere>(rmrt::Point3(0, -100.5, -1), 100));
+
 
 	// Camera
 	auto viewportHeight{ 2.0 };
@@ -41,7 +49,7 @@ int main()
 			auto rayDirection{ (u * horizontal) + (v * vertical) - origin };
 
 			rmrt::Ray ray{ origin, lowerLeftCorner + rayDirection };
-			rmrt::Color pixelColor{ ray.RayColor(ray) };
+			rmrt::Color pixelColor{ world.RayColor(ray, world) };
 			rmrt::WriteColor(std::cout, pixelColor);
 		}
 	}

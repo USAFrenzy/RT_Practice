@@ -5,6 +5,7 @@ set(RMRT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
 # Individual Groups Of Files
 set(RMRT_HEADERS
+    "${RMRT_INCLUDE_DIR}/RMRT/RMRT.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Vec3.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Ray.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Objects/HittableObject.h"

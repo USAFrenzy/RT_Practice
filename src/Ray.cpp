@@ -1,10 +1,6 @@
 
 #include <RMRT/Ray.h>
 
-
-#include <unordered_map> // temp usage for readabilitry in RayColor in Module 4.2
-
-
 namespace rmrt {
 
 	Ray::Ray(const Point3& origin, const Vec3& direction) : m_origin(origin), m_direction(direction) {}
@@ -22,45 +18,6 @@ namespace rmrt {
 	Point3 Ray::At(double t) const
 	{
 		return m_origin + (t * m_direction);
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Temp usage for readability for module 4.2's RayColor() function
-	enum class TempColor {
-		white,
-		blue,
-	};
-	static  std::unordered_map<TempColor, Color>  colorMap =
-	{
-		{ TempColor::white, Color(1.0, 1.0, 1.0) },
-		{TempColor::blue, Color(0.5, 0.7, 1.0)},
-	};
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// This function is used to blend the colors in the background, the author states it's a gradient of blue to white.
-	// This is using linear interpolation with the equation: 
-	// 
-	//                      blendedValue = (1-t)*startValue + (t*endValue)
-	// 
-	//  NOTE: In the paragraph under this exceprt in module 4.2, the explanation basically tells us that this is dependant on
-	//    clamping the Color points between '0' and '1' for the gradient. (when t = 0.0 -> white, when t = 1.0 -> blue) on the 
-	//    normalized Y-Axis.
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Color Ray::RayColor(const Ray& ray)
-	{
-		// From module 5.2, we are hard-coding the sphere center, radius, and color produced when the ray hits the sphere;
-		// In actual code, this would most likely be dynamic in the form of input paramaters and attributes instead.
-		// Module 6 added a condition on shading the sphere if the ray hits it by normalizing the vector point |_ to the sphere.
-		if (auto t{ SphereHit(Point3(0, 0, -1), 0.5, ray) };  t > 0.0) {
-			Vec3 n{ UnitVector(ray.At(t) - Vec3(0,0,-1)) };
-			return 0.5 * Color(n.X() + 1, n.Y() + 1, n.Z() + 1);
-		}
-		else {
-			Vec3 unitDirection{ UnitVector(ray.Direction()) };
-			t = 0.5 * (unitDirection.Y() + 1.0);
-			return ((1.0 - t) * colorMap[TempColor::white]) + (t * colorMap[TempColor::blue]);
-		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
