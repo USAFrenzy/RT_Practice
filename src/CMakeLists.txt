@@ -11,6 +11,7 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Objects/HittableObject.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Objects/HittableList.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Objects/Sphere.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Camera/Camera.h"
 )
 
 set(RMRT_SOURCES 
@@ -18,6 +19,7 @@ set(RMRT_SOURCES
     "Ray.cpp"
     "Objects/Sphere.cpp"
     "Objects/HittableList.cpp"
+    "Camera/Camera.cpp"
 )
 
 source_group(

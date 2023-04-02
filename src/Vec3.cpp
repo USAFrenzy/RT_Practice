@@ -137,18 +137,18 @@ namespace rmrt {
 
 	/**************************************************************************************************************************
 	*  Just like with the other vector concepts, notating this one out for a refresher.
-	* 
+	*
 	*  For Cross Products:
-	* 
+	*
 	*  1) We create a 3D matrix of each component of the vectors:
 	*       i  j  k
 	*     | a1  b1  c1  |
 	*     | a2  b2  c2  |
-	*  2) We then find the determinates by taking each component multiplied by its respective 2D matrix by x-multiplying 
+	*  2) We then find the determinates by taking each component multiplied by its respective 2D matrix by x-multiplying
 	*     (subtracting the second term from the first) each 2D matrix by the corresponding 3D component factor:
-	*     (  |  b1  c1  |        )      (  |  a1  c1  |         )     (  |  a1  b1  |  )         ) 
+	*     (  |  b1  c1  |        )      (  |  a1  c1  |         )     (  |  a1  b1  |  )         )
 	*     (  |  b2  c2  |  * i   )   -  (  |  a2  c2  |   *  j  )  +  (  |  a2  b2  |  )   *  k  )   ---->
-	*     a  x  b  =  ((( b1*c2)-(c1*b2) )* i) - ((( a1*c2)-(c1*a2) )* j)  + ((( a1*b2)-(b1*a2) )* k)  
+	*     a  x  b  =  ((( b1*c2)-(c1*b2) )* i) - ((( a1*c2)-(c1*a2) )* j)  + ((( a1*b2)-(b1*a2) )* k)
 	*  3) The only difference here, is that instead of the full calculation, we are just creating and returning a Vec3 object with the computed values.
 	*************************************************************************************************************************/
 	Vec3 Cross(const Vec3& u, const Vec3& v)
@@ -163,13 +163,5 @@ namespace rmrt {
 	Vec3  UnitVector(Vec3 v)
 	{
 		return v / v.Length();
-	}
-	void WriteColor(std::ostream& out, Color pixelColor)
-	{
-		// This basically does what the initial code in the 2.1 module of 'Raytracing In One Weekend' accomplished, 
-		// except it now uses the ostream class to write to the console (This is from module 3.3)
-		out << static_cast<int>(rgb_factor * pixelColor.X()) << ' ' 
-			  << static_cast<int>(rgb_factor * pixelColor.Y()) << ' ' 
-			  << static_cast<int>(rgb_factor * pixelColor.Z()) << '\n';
 	}
 }

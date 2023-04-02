@@ -4,7 +4,6 @@
 
 namespace rmrt {
 
-	constexpr auto rgb_factor{ 255.999 };
 
 	class Vec3 {
 	public:
@@ -42,11 +41,7 @@ namespace rmrt {
 	Vec3 operator*(const Vec3& v, double t);
 	Vec3 operator/(Vec3 v, double t);
 
-	// Scalar
 	double Dot(const Vec3& u, const Vec3& v);
-
 	Vec3 Cross(const Vec3& u, const Vec3& v);
 	Vec3 UnitVector(Vec3 v);
-
-	void WriteColor(std::ostream& out, Color pixelColor);
 }
