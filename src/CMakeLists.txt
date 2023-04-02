@@ -7,11 +7,16 @@ set(RMRT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Vec3.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Ray.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Objects/HittableObject.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Objects/HittableList.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Objects/Sphere.h"
 )
 
 set(RMRT_SOURCES 
     "Vec3.cpp"
     "Ray.cpp"
+    "Objects/Sphere.cpp"
+    "Objects/HittableList.cpp"
 )
 
 source_group(
