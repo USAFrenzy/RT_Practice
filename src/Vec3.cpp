@@ -1,5 +1,6 @@
 
 #include <RMRT/Vec3.h>
+#include <RMRT/RMRT.h>
 
 #include <cmath>
 
@@ -54,6 +55,41 @@ namespace rmrt {
 	double Vec3::LengthSquared() const
 	{
 		return (e[0] * e[0]) + (e[1] * e[1]) + (e[2] * e[2]);
+	}
+
+	bool Vec3::NearZero() const
+	{
+		const auto s = 1e-8;
+		return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+	}
+
+	Vec3 Vec3::Random()
+	{
+		return Vec3(RandomDouble(), RandomDouble(), RandomDouble());
+	}
+
+	Vec3 Vec3::Random(double min, double max)
+	{
+		return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
+	}
+
+	Vec3 RandomInUnitSphere()
+	{
+		while (true) {
+			auto p{ Vec3::Random(-1, 1) };
+			if (p.LengthSquared() >= 1) continue;
+			return p;
+		}
+	}
+
+	Vec3 rmrt::RandomUnitVector()
+	{
+		return UnitVector(RandomInUnitSphere());
+	}
+
+	Vec3 Reflect(const Vec3& v, const Vec3& n)
+	{
+		return v - (2*n*Dot(v,n));
 	}
 
 	Vec3 Vec3::operator-() const
@@ -133,7 +169,6 @@ namespace rmrt {
 	{
 		return (u.e[0] * v.e[0]) + (u.e[1] * v.e[1]) + (u.e[2] * v.e[2]);
 	}
-
 
 	/**************************************************************************************************************************
 	*  Just like with the other vector concepts, notating this one out for a refresher.

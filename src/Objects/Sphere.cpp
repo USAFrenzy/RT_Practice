@@ -6,7 +6,7 @@ namespace rmrt {
 	{
 	}
 
-	Sphere::Sphere(Point3 center, double radius) : m_center(center), m_radius(radius)
+	Sphere::Sphere(Point3 center, double radius, std::shared_ptr<Material> material) : m_center(center), m_radius(radius), m_materialPtr(material)
 	{
 	}
 
@@ -59,6 +59,7 @@ namespace rmrt {
 		record.p = ray.At(record.t);
 		Vec3 outwardNormal{ (record.p - m_center) / m_radius };
 		record.SetFaceNormal(ray, outwardNormal);
+		record.materialPtr = m_materialPtr;
 
 		return true;
 	}

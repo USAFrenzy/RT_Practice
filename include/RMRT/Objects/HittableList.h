@@ -19,9 +19,9 @@ namespace rmrt {
 		void Clear();
 		void Store(std::shared_ptr<HittableObject> object);
 		virtual bool Hit(const Ray& ray, double tmin, double tMax, HitRecord& record) const;
-		Color RayColor(const Ray& ray, const HittableObject& worldObject);
 
 	private:
 		HittableObjectList m_objects;
 	};
+		Color RayColor(const Ray& ray, const HittableObject& worldObject, int depth);
 }

@@ -1,13 +1,16 @@
 #pragma once
 
-#include <RMRT/Ray.h>
+#include <RMRT/RMRT.h>
 
 namespace rmrt {
+
+	class Material;
 
 	struct HitRecord
 	{
 		Point3 p;
 		Vec3 normal;
+		std::shared_ptr<Material> materialPtr;
 		double t;
 		bool frontFace;
 

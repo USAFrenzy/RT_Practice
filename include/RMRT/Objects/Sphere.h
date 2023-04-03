@@ -9,7 +9,7 @@ namespace rmrt {
 	{
 	public:
 		Sphere();
-		Sphere(Point3 center, double radius);
+		Sphere(Point3 center, double radius, std::shared_ptr<Material> material);
 		~Sphere();
 
 		void SetCenter(const Point3& center);
@@ -21,6 +21,6 @@ namespace rmrt {
 	private:
 		Point3 m_center;
 		double m_radius;
-
+		std::shared_ptr<Material> m_materialPtr;
 	};
 }

@@ -8,8 +8,6 @@
 
 // Common headers to include
 #include <RMRT/Ray.h>
-#include <RMRT/Vec3.h>
-
 
 namespace rmrt {
 
@@ -29,6 +27,12 @@ namespace rmrt {
 		return distribution(generator);
 	}
 
+	inline double RandomDouble(double min, double max) {
+		static std::uniform_real_distribution<double> distribution(min, max);
+		static std::mt19937 generator;
+		return distribution(generator);
+	}
+
 	// Module 7.2 utility to update WriteColor()
 	inline double Clamp(double x, double min, double max) {
 		if (x < min) return min;
@@ -39,9 +43,9 @@ namespace rmrt {
 	inline void WriteColor(std::ostream& out, rmrt::Color pixelColor, int samplesPerPixel)
 	{
 		auto scale{ 1.0 / samplesPerPixel };
-		auto r{ pixelColor.X() * scale };
-		auto g{ pixelColor.Y() * scale };
-		auto b{ pixelColor.Z() * scale };
+		auto r{  std::sqrt(pixelColor.X() * scale)};
+		auto g{ std::sqrt(pixelColor.Y() * scale) };
+		auto b{ std::sqrt(pixelColor.Z() * scale) };
 		// This basically does what the initial code in the 2.1 module of 'Raytracing In One Weekend' accomplished, 
 		// except it now uses the ostream class to write to the console (This is from module 3.3)
 		//
@@ -56,11 +60,21 @@ namespace rmrt {
 	enum class TempColor {
 		white,
 		blue,
+		bluish,
+		pink,
+		goldish,
+		greenish,
+		black,
 	};
 	static  std::unordered_map<TempColor, rmrt::Color>  colorMap =
 	{
 		{ TempColor::white, rmrt::Color(1.0, 1.0, 1.0) },
 		{TempColor::blue, rmrt::Color(0.5, 0.7, 1.0)},
+		{TempColor::pink, rmrt::Color(0.7, 0.3, 0.3)},
+		{TempColor::greenish, rmrt::Color(0.8, 0.8, 0.0)},
+		{TempColor::bluish, rmrt::Color(0.8,0.8, 0.8)},
+		{TempColor::goldish, rmrt::Color(0.8, 0.6, 0.2)},
+		{TempColor::black, rmrt::Color(0,0,0)},
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

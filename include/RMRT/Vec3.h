@@ -14,6 +14,9 @@ namespace rmrt {
 		double Z() const;
 		double Length() const;
 		double LengthSquared() const;
+		bool NearZero() const;
+		static Vec3 Random();
+		static Vec3 Random(double min, double max);
 
 		// operator overloads
 		Vec3 operator-() const;
@@ -22,7 +25,6 @@ namespace rmrt {
 		Vec3& operator +=(const Vec3& v);
 		Vec3& operator*=(const double t);
 		Vec3& operator/=(const double t);
-
 
 	public:
 		double e[3];
@@ -44,4 +46,7 @@ namespace rmrt {
 	double Dot(const Vec3& u, const Vec3& v);
 	Vec3 Cross(const Vec3& u, const Vec3& v);
 	Vec3 UnitVector(Vec3 v);
+	Vec3 RandomInUnitSphere();
+	Vec3 RandomUnitVector();
+	Vec3 Reflect(const Vec3& v, const Vec3& n);
 }
