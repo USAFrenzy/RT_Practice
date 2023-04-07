@@ -4,6 +4,8 @@
 #include <RMRT/Objects/Sphere.h>
 #include <RMRT/Camera/Camera.h>
 #include <RMRT/Materials/Material.h>
+#include <RMRT/Materials/Metal.h>
+#include <RMRT/Image/Image.h>
 
 #include <iostream>
 
@@ -13,18 +15,23 @@ int main()
 
 	// Image
 	constexpr auto aspectRatio{ 16.0 / 9.0 };  // 16:9
-	constexpr int imgWidth{ 2160 };
-	constexpr int imgHeight{ static_cast<int>(imgWidth / aspectRatio) };
-	constexpr int samplesPerPixel{ 100000 };
-	constexpr int maxDepth{ 50000 };
+	constexpr int defaultWidth{ 400 };
+	constexpr int hdWidth{ 1920 };
+	constexpr int qhdWidth{ 2560 };
+	constexpr int uhdWidth{ 3840 };
+
+	Image image("image.ppm", aspectRatio, qhdWidth); // uses default RTIOW settings
+	image.SetDimensions(qhdWidth);
+	image.SetRaySampleCount(10000);
+	image.SetDiffuseRayCount(1000);
 
 	// World
 	HittableList world{};
 
 	auto materialGround{ std::make_shared<Lambertian>(colorMap[TempColor::greenish]) };
 	auto materialCenter{ std::make_shared<Lambertian>(colorMap[TempColor::pink]) };
-	auto materialLeft{ std::make_shared<MetalMaterial>(colorMap[TempColor::bluish]) };
-	auto materialRight{ std::make_shared<MetalMaterial>(colorMap[TempColor::goldish]) };
+	auto materialLeft{ std::make_shared<MetalMaterial>(colorMap[TempColor::bluish], 0.2) };
+	auto materialRight{ std::make_shared<MetalMaterial>(colorMap[TempColor::goldish], 1.0) };
 
 	world.Store(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100, materialGround));
 	world.Store(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, materialCenter));
@@ -33,30 +40,9 @@ int main()
 
 	// Camera
 	Camera camera{};
+	camera.SetFocalLength(1.25);
 
 	// Render
-	std::cout << "P3\n" << imgWidth << " " << imgHeight << "\n255\n";
+	image.TraceImage(camera, world);
 
-	// Extracting the constant variables from within the loop for readablity
-	constexpr auto b{ 0.25 };
-	constexpr auto cWidth{ imgWidth - 1 };
-	constexpr auto cHeight{ imgHeight - 1 };
-
-	for (auto i{ cHeight }; i >= 0; --i) {
-		// Adding a progress indicator
-		std::cerr << "\rScanlines Remaining: " << i << ' ' << std::flush;
-		for (auto j{ 0 }; j < imgWidth; ++j) {
-			Color pixelColor(0, 0, 0);
-			for (int k{ 0 }; k < samplesPerPixel; ++k) {
-				// 'u' and 'v' are the superimposed axes over the camera viewport axes
-				auto u{ (j + RandomDouble()) / cWidth };
-				auto v{ (i + RandomDouble()) / cHeight };
-				Ray ray{ camera.GetRay(u, v) };
-				pixelColor += RayColor(ray, world, maxDepth);
-			}
-			WriteColor(std::cout, pixelColor, samplesPerPixel);
-		}
-	}
-	// Progress completed
-	std::cerr << "\nDone.\n";
 }

@@ -40,21 +40,6 @@ namespace rmrt {
 		return x;
 	}
 
-	inline void WriteColor(std::ostream& out, rmrt::Color pixelColor, int samplesPerPixel)
-	{
-		auto scale{ 1.0 / samplesPerPixel };
-		auto r{  std::sqrt(pixelColor.X() * scale)};
-		auto g{ std::sqrt(pixelColor.Y() * scale) };
-		auto b{ std::sqrt(pixelColor.Z() * scale) };
-		// This basically does what the initial code in the 2.1 module of 'Raytracing In One Weekend' accomplished, 
-		// except it now uses the ostream class to write to the console (This is from module 3.3)
-		//
-		// The addition of the above lines with the scale and the function Clamp() is found from module 7.2
-		out << static_cast<int>(rgb_factor * rmrt::Clamp(r, 0.0, 0.999)) << ' '
-			<< static_cast<int>(rgb_factor * rmrt::Clamp(g, 0.0, 0.999)) << ' '
-			<< static_cast<int>(rgb_factor * rmrt::Clamp(b, 0.0, 0.999)) << '\n';
-	}
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Temp usage for readability for module 4.2's RayColor() function
 	enum class TempColor {
@@ -71,9 +56,9 @@ namespace rmrt {
 		{ TempColor::white, rmrt::Color(1.0, 1.0, 1.0) },
 		{TempColor::blue, rmrt::Color(0.5, 0.7, 1.0)},
 		{TempColor::pink, rmrt::Color(0.7, 0.3, 0.3)},
-		{TempColor::greenish, rmrt::Color(0.8, 0.8, 0.0)},
-		{TempColor::bluish, rmrt::Color(0.8,0.8, 0.8)},
-		{TempColor::goldish, rmrt::Color(0.8, 0.6, 0.2)},
+		{TempColor::greenish, rmrt::Color(0.5, 0.63, 0.1)},
+		{TempColor::bluish, rmrt::Color(0.1,0.1, 0.9)},
+		{TempColor::goldish, rmrt::Color(0.9, 0.7, 0.3)},
 		{TempColor::black, rmrt::Color(0,0,0)},
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

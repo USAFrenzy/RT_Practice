@@ -29,3 +29,8 @@ rmrt::Ray rmrt::Camera::GetRay(double u, double v) const
 {
 	return Ray(m_origin, m_lowerLeftCorner + (u * m_horizontal) + (v * m_vertical) - m_origin);
 }
+
+void rmrt::Camera::SetFocalLength(double focalLength)
+{
+	m_lowerLeftCorner = (m_origin - (m_horizontal / 2) - (m_vertical / 2) - Vec3(0, 0, focalLength));
+}

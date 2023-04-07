@@ -12,6 +12,8 @@ namespace rmrt {
 		~Camera();
 
 		Ray GetRay(double u, double v) const;
+		void SetFocalLength(double focalLength);
+
 
 	private:
 		Point3 m_origin;

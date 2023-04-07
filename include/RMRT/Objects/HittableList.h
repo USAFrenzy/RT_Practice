@@ -2,7 +2,6 @@
 
 #include <RMRT/Objects/HittableObject.h>
 
-#include <memory>
 #include <vector>
 
 namespace rmrt {

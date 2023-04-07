@@ -1,5 +1,6 @@
 #include <RMRT/Materials/Material.h>
 
+// This cpp file should be done away with once the Lambertian class is in its own file as well
 namespace rmrt {
 
 	Lambertian::Lambertian(const Color& albedo) : m_albedo(albedo)
@@ -14,18 +15,6 @@ namespace rmrt {
 		scattered = Ray(record.p, scatterDirection);
 		attenuation = m_albedo;
 		return true;
-	}
-
-	MetalMaterial::MetalMaterial(const Color& albedo) : m_albedo(albedo)
-	{
-	}
-
-	bool MetalMaterial::Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const
-	{
-		Vec3 reflected{ Reflect(UnitVector(ray.Direction()), record.normal) };
-		scattered = Ray(record.p, reflected);
-		attenuation = m_albedo;
-		return (Dot(scattered.Direction(), record.normal) > 0);
 	}
 
 }

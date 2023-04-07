@@ -12,7 +12,9 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Objects/HittableList.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Objects/Sphere.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Camera/Camera.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Image/Image.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Material.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Materials/Metal.h"
 )
 
 set(RMRT_SOURCES 
@@ -22,6 +24,8 @@ set(RMRT_SOURCES
     "Objects/HittableList.cpp"
     "Camera/Camera.cpp"
     "Materials/Material.cpp"
+    "Materials/Metal.cpp"
+    "Image/Image.cpp"
 )
 
 source_group(

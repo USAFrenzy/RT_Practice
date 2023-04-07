@@ -15,6 +15,7 @@ namespace rmrt {
 		double Length() const;
 		double LengthSquared() const;
 		bool NearZero() const;
+		void Clear();
 		static Vec3 Random();
 		static Vec3 Random(double min, double max);
 

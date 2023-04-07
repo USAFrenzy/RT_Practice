@@ -1,8 +1,5 @@
 
 #include <RMRT/Objects/HittableList.h>
-#include <RMRT/Vec3.h>
-#include <RMRT/RMRT.h>
-#include <RMRT/Materials/Material.h>
 
 namespace rmrt {
 	HittableList::HittableList()

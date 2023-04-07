@@ -82,6 +82,10 @@ namespace rmrt {
 		}
 	}
 
+	void Vec3::Clear() {
+		e[0] = e[1] =e[2] = 0.0;
+	}
+
 	Vec3 rmrt::RandomUnitVector()
 	{
 		return UnitVector(RandomInUnitSphere());

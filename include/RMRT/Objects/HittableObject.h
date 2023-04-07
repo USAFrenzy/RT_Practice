@@ -1,6 +1,9 @@
 #pragma once
 
 #include <RMRT/RMRT.h>
+#include <RMRT/Materials/Material.h>
+
+#include <memory>
 
 namespace rmrt {
 
