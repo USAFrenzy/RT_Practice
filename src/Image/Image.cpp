@@ -6,14 +6,6 @@
 
 namespace rmrt {
 
-	// Below speed times up a bit and was taken from https://www.gamedev.net/forums/topic/704525-3-quick-ways-to-calculate-the-square-root-in-c/
-	float sqrt(const float& n)
-	{
-		static union { int i; float f; } u;
-		u.i = 0x5F375A86 - (*(int*)&n >> 1);
-		return (int(3) - n * u.f * u.f) * n * u.f * 0.5f;
-	}
-
 	Image::Image(std::string fileName, float aspectRatio, int width)
 		: m_name(fileName), m_aspectRatio(aspectRatio), m_width(width), m_height(static_cast<int>(width / aspectRatio)),
 		m_maxDiffuseRays(50), m_samplesPerPixel(100), m_samplesIter(std::vector<int>{}), m_file(std::ofstream{}), m_scale(1.0f / m_samplesPerPixel)
@@ -38,7 +30,7 @@ namespace rmrt {
 	void Image::SetRaySampleCount(int numberOfSamples)
 	{
 		m_samplesPerPixel = numberOfSamples;
-		m_scale = (1.0f/ m_samplesPerPixel);
+		m_scale = (1.0f / m_samplesPerPixel);
 		if (m_samplesIter.capacity() < m_samplesPerPixel) {
 			m_samplesIter.resize(m_samplesPerPixel);
 			for (auto& pos : m_samplesIter) m_samplesIter[pos] = pos;
@@ -85,11 +77,11 @@ namespace rmrt {
 		return pixelColor;
 	}
 
-	void Image::WriteColor(const rmrt::Color &pixelColor)
+	void Image::WriteColor(const rmrt::Color& pixelColor)
 	{
 		const auto data{ m_buffer.data() };
 		std::memset(data, '\0', 16);
-		Vec3 rgbVec {pixelColor};
+		Vec3 rgbVec{ pixelColor };
 		ScaleVecViaClamp(rgbVec, 0.0f, 0.999f);
 
 		auto pos{ std::to_chars(data, data + 16, static_cast<int>(rgbVec.X())).ptr - data };
@@ -110,7 +102,7 @@ namespace rmrt {
 			// Adding a progress indicator
 			for (auto j{ 0 }; j < m_width; ++j) {
 				std::cerr << "\rScanlines Remaining: " << i
-					<< "    " << "Current Pixel: [ " << j+1<< " / " << m_width << " ]" << "  " << std::flush;
+					<< "    " << "Current Pixel: [ " << j + 1 << " / " << m_width << " ]" << "  " << std::flush;
 				WriteColor(RaySamples(camera, world, j, i));
 			}
 		}
