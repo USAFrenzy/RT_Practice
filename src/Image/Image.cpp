@@ -2,22 +2,32 @@
 #include <RMRT/Image/Image.h>
 
 #include <iostream>
+#include <charconv>
 
 namespace rmrt {
-	Image::Image(std::string fileName, double aspectRatio, int width)
+
+	// Below speed times up a bit and was taken from https://www.gamedev.net/forums/topic/704525-3-quick-ways-to-calculate-the-square-root-in-c/
+	float sqrt(const float& n)
+	{
+		static union { int i; float f; } u;
+		u.i = 0x5F375A86 - (*(int*)&n >> 1);
+		return (int(3) - n * u.f * u.f) * n * u.f * 0.5f;
+	}
+
+	Image::Image(std::string fileName, float aspectRatio, int width)
 		: m_name(fileName), m_aspectRatio(aspectRatio), m_width(width), m_height(static_cast<int>(width / aspectRatio)),
-		m_maxDiffuseRays(50), m_samplesPerPixel(100), m_samplesIter(std::vector<int>{}), file(std::ofstream{})
+		m_maxDiffuseRays(50), m_samplesPerPixel(100), m_samplesIter(std::vector<int>{}), m_file(std::ofstream{}), m_scale(1.0f / m_samplesPerPixel)
 	{
 		m_samplesIter.resize(m_samplesPerPixel);
 		for (auto& pos : m_samplesIter) m_samplesIter[pos] = pos;
-		file.open(fileName, std::ios_base::trunc);
+		m_file.open(fileName, std::ios_base::trunc);
 		WriteHeaderPPM();
 	}
 
 	Image::~Image()
 	{
-		file.flush();
-		file.close();
+		m_file.flush();
+		m_file.close();
 	}
 
 	void Image::SetDiffuseRayCount(int numberOfRays)
@@ -28,6 +38,7 @@ namespace rmrt {
 	void Image::SetRaySampleCount(int numberOfSamples)
 	{
 		m_samplesPerPixel = numberOfSamples;
+		m_scale = (1.0f/ m_samplesPerPixel);
 		if (m_samplesIter.capacity() < m_samplesPerPixel) {
 			m_samplesIter.resize(m_samplesPerPixel);
 			for (auto& pos : m_samplesIter) m_samplesIter[pos] = pos;
@@ -37,18 +48,18 @@ namespace rmrt {
 	void Image::SetDimensions(int width, int height) {
 		m_width = width;
 		m_height = height == 0 ? static_cast<int>(width / m_aspectRatio) : height;
-		file.close();
-		file.open(m_name, std::ios_base::trunc);
+		m_file.close();
+		m_file.open(m_name, std::ios_base::trunc);
 		WriteHeaderPPM(); // need to rewrite header for the new dimensions
 	}
 
 	void Image::WriteHeaderPPM() {
-		if (file.is_open()) file.close();
-		file.open(m_name, std::ios_base::trunc);
+		if (m_file.is_open()) m_file.close();
+		m_file.open(m_name, std::ios_base::trunc);
 		std::string fileHeader{ "P3\n" };
 		fileHeader.append(std::to_string(m_width)).append(" ").append(std::to_string(m_height)).append("\n255\n");
-		file.write(fileHeader.data(), fileHeader.size());
-		file.flush();
+		m_file.write(fileHeader.data(), fileHeader.size());
+		m_file.flush();
 	}
 
 
@@ -74,32 +85,32 @@ namespace rmrt {
 		return pixelColor;
 	}
 
-	void Image::WriteColor(const rmrt::Color& pixelColor)
+	void Image::WriteColor(const rmrt::Color &pixelColor)
 	{
-		auto scale{ 1.0 / m_samplesPerPixel };
-		auto r{ std::sqrt(pixelColor.X() * scale) };
-		auto g{ std::sqrt(pixelColor.Y() * scale) };
-		auto b{ std::sqrt(pixelColor.Z() * scale) };
-		// This basically does what the initial code in the 2.1 module of 'Raytracing In One Weekend' accomplished, 
-		// except it now uses the ostream class to write to the console (This is from module 3.3)
-		//
-		// The addition of the above lines with the scale and the function Clamp() is found from module 7.2
-		fileTempBuff.clear();
-		fileTempBuff.append(std::to_string(static_cast<int>(rgb_factor * rmrt::Clamp(r, 0.0, 0.999))))
-			.append(" ")
-			.append(std::to_string(static_cast<int>(rgb_factor * rmrt::Clamp(g, 0.0, 0.999))))
-			.append(" ")
-			.append(std::to_string(static_cast<int>(rgb_factor * rmrt::Clamp(b, 0.0, 0.999))))
-			.append("\n");
-		file.write(fileTempBuff.data(), fileTempBuff.size());
-		file.flush();
+		const auto data{ m_buffer.data() };
+		std::memset(data, '\0', 16);
+		Vec3 rgbVec {pixelColor};
+		ScaleVecViaClamp(rgbVec, 0.0f, 0.999f);
+
+		auto pos{ std::to_chars(data, data + 16, static_cast<int>(rgbVec.X())).ptr - data };
+		m_buffer[pos] = ' ';
+		++pos;
+		pos = std::to_chars(data + pos, data + 16, static_cast<int>(rgbVec.Y())).ptr - data;
+		m_buffer[pos] = ' ';
+		++pos;
+		pos = std::to_chars(data + pos, data + 16, static_cast<int>(rgbVec.Z())).ptr - data;
+		m_buffer[pos] = '\n';
+		m_file.write(data, ++pos);
+		m_file.flush();
 	}
 
 	void Image::TraceImage(const Camera& camera, const HittableList& world) {
+		std::cerr << "\n";
 		for (auto i{ m_height - 1 }; i >= 0; --i) {
 			// Adding a progress indicator
-			std::cerr << "\rScanlines Remaining: " << i << ' ' << std::flush;
 			for (auto j{ 0 }; j < m_width; ++j) {
+				std::cerr << "\rScanlines Remaining: " << i
+					<< "    " << "Current Pixel: [ " << j+1<< " / " << m_width << " ]" << "  " << std::flush;
 				WriteColor(RaySamples(camera, world, j, i));
 			}
 		}
@@ -107,4 +118,10 @@ namespace rmrt {
 		std::cerr << "\nDone.\n";
 	}
 
+	void Image::ScaleVecViaClamp(Vec3& vec, float min, float max) {
+		for (auto& val : vec.e) val = sqrt(val *= m_scale);
+		vec.e[0] = rgb_factor * (vec.e[0]  < min ? min : vec.e[0] > max ? max : vec.e[0]);
+		vec.e[1] = rgb_factor * (vec.e[1]  < min ? min : vec.e[1] > max ? max : vec.e[1]);
+		vec.e[2] = rgb_factor * (vec.e[2]  < min ? min : vec.e[2] > max ? max : vec.e[2]);
+	}
 }

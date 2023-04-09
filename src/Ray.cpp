@@ -15,7 +15,7 @@ namespace rmrt {
 		return m_direction;
 	}
 
-	Point3 Ray::At(double t) const
+	Point3 Ray::At(float t) const
 	{
 		return m_origin + (t * m_direction);
 	}
@@ -45,7 +45,7 @@ namespace rmrt {
 	// 5b) If the discriminant is < 0, there are no solutions, meaning no intersections
 	// 5c) If the discriminant == 0, there is exactly one solution, meaning there is exactly one intersection, the tangent.   
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	double Ray::SphereHit(const Point3& center, double radius, const Ray& ray)
+	float Ray::SphereHit(const Point3& center, float radius, const Ray& ray)
 	{
 		Vec3 originCenter{ ray.Origin() - center };
 		// Both 'a' and 'c' were simplified in module 6.2 due to the vector attribute that states: 
@@ -56,7 +56,7 @@ namespace rmrt {
 		auto c{ originCenter.LengthSquared() - (radius * radius) };
 		auto discriminant{ bHalf * bHalf - (a * c) };
 		// My note from last commit was addressed in module 6 based on normalizing the vectors for shading
-		return discriminant < 0 ? -1.0 : ((-bHalf - std::sqrt(discriminant)) / a);
+		return discriminant < 0.0f ? -1.0f : ((-bHalf - std::sqrt(discriminant)) / a);
 	}
 
 }

@@ -6,17 +6,17 @@
 
 namespace rmrt {
 
-	double Vec3::X() const
+	float Vec3::X() const
 	{
 		return e[0];
 	}
 
-	double Vec3::Y() const
+	float Vec3::Y() const
 	{
 		return e[1];
 	}
 
-	double Vec3::Z() const
+	float Vec3::Z() const
 	{
 		return e[2];
 	}
@@ -47,12 +47,12 @@ namespace rmrt {
 	*   Length =   v| (x^2) + (y^2 )+ (z^2)
 	*
 	*********************************************************************************************************************************/
-	double Vec3::Length() const
+	float Vec3::Length() const
 	{
 		return std::sqrt(LengthSquared());
 	}
 
-	double Vec3::LengthSquared() const
+	float Vec3::LengthSquared() const
 	{
 		return (e[0] * e[0]) + (e[1] * e[1]) + (e[2] * e[2]);
 	}
@@ -68,32 +68,44 @@ namespace rmrt {
 		return Vec3(RandomDouble(), RandomDouble(), RandomDouble());
 	}
 
-	Vec3 Vec3::Random(double min, double max)
+	Vec3 Vec3::Random(float min, float max)
 	{
 		return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
 	}
 
 	Vec3 RandomInUnitSphere()
 	{
-		while (true) {
+		for (;;) {
 			auto p{ Vec3::Random(-1, 1) };
-			if (p.LengthSquared() >= 1) continue;
-			return p;
+			if (p.LengthSquared() < 1.0) return p;
+			continue;
 		}
 	}
 
 	void Vec3::Clear() {
-		e[0] = e[1] =e[2] = 0.0;
+		e[0] = e[1] = e[2] = 0.0;
 	}
 
 	Vec3 rmrt::RandomUnitVector()
 	{
-		return UnitVector(RandomInUnitSphere());
+		// The original call called "UnitVector(RandomInUnitSphere())"; I believe just directly looping and dividing into 
+		// itself instead of producing a new register load and divide would be more effiecient as a low-hanging fruit here,
+		// however, the extra variable used to store the length squared result might negate that change. At the same time 
+		// though, it should be a net-benefit since the original loop would have basically called LengthSquared() twice 
+		// before taking the sqaure root anyways.
+
+		// return UnitVector(RandomInUnitSphere());
+
+		for (;;) {
+			auto p{ Vec3::Random(-1, 1) };
+			if (const auto result{ p.LengthSquared() }; result < 1.0) 	return p /= std::sqrt(result);
+			continue;
+		}
 	}
 
 	Vec3 Reflect(const Vec3& v, const Vec3& n)
 	{
-		return v - (2*n*Dot(v,n));
+		return v - (2 * n * Dot(v, n));
 	}
 
 	Vec3 Vec3::operator-() const
@@ -101,12 +113,12 @@ namespace rmrt {
 		return Vec3(-e[0], -e[1], -e[2]);
 	}
 
-	double Vec3::operator[](int i) const
+	float Vec3::operator[](int i) const
 	{
 		return e[i];
 	}
 
-	double& Vec3::operator[](int i)
+	float& Vec3::operator[](int i)
 	{
 		return e[i];
 	}
@@ -119,7 +131,7 @@ namespace rmrt {
 		return *this;
 	}
 
-	Vec3& Vec3::operator*=(const double t)
+	Vec3& Vec3::operator*=(const float t)
 	{
 		e[0] *= t;
 		e[1] *= t;
@@ -127,7 +139,7 @@ namespace rmrt {
 		return *this;
 	}
 
-	Vec3& Vec3::operator/=(const double t)
+	Vec3& Vec3::operator/=(const float t)
 	{
 		return *this *= 1 / t;
 	}
@@ -153,23 +165,23 @@ namespace rmrt {
 		return Vec3(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2]);
 	}
 
-	Vec3 operator*(double t, const Vec3& v)
+	Vec3 operator*(float t, const Vec3& v)
 	{
 		return Vec3(t * v.e[0], t * v.e[1], t * v.e[2]);
 	}
 
-	Vec3 operator*(const Vec3& v, double t)
+	Vec3 operator*(const Vec3& v, float t)
 	{
 		return t * v;
 	}
 
-	Vec3 operator/(Vec3 v, double t)
+	Vec3 operator/(Vec3 v, float t)
 	{
 		return (1 / t) * v;
 	}
 
 	// Scalar
-	double Dot(const Vec3& u, const Vec3& v)
+	float Dot(const Vec3& u, const Vec3& v)
 	{
 		return (u.e[0] * v.e[0]) + (u.e[1] * v.e[1]) + (u.e[2] * v.e[2]);
 	}
@@ -203,4 +215,21 @@ namespace rmrt {
 	{
 		return v / v.Length();
 	}
+
+	// Takes into consideration Snell's Law ( n*sin0 = n'*sin0' ) where:
+	// both 0 & 0' are angles from the normal and both n and n' are the refractive indices
+	// 1) To solve for the direction of the refracted ray, solve for sin0'
+	//    This leaves us with sin0'=n/n'*sin0 where the refracted rays can be split into their |_ and || counterparts
+	//    This now leaves us with two ray functions: A) R' = n/n'(R + cos0*n)   and   B) R'|| = - sqrt(1 - |R'|_ |^2*n)
+	// 2) The dot product between two vectors can be simplified as the cosine angle between them to get: a*b = cos0
+	// 3) This leaves the final equation as: R'|_ = n/n' * (R + (-R*n)*n)
+	Vec3 rmrt::Refract(const Vec3& uv, const Vec3& n, float etai_over_etat)
+	{
+		auto cosineTheta{ fmin(Dot(-uv, n), 1.0f) };
+		Vec3 perpendicularRayOut{ etai_over_etat * (uv + (cosineTheta * n)) };
+		Vec3 parallelRayOut{ -sqrt(fabs(1.0f - perpendicularRayOut.LengthSquared())) * n };
+		return perpendicularRayOut += parallelRayOut;
+	}
+
+
 }

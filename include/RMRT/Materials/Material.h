@@ -12,15 +12,5 @@ namespace rmrt {
 		virtual bool Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const = 0;
 	};
 
-	// This should be in its own file as well
-	class Lambertian : public Material {
-	public:
-		Lambertian(const Color& albedo);
-		virtual bool Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const override;
-
-	public:
-		Color m_albedo;
-	};
-
 }
 

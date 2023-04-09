@@ -6,12 +6,12 @@ namespace rmrt {
 
 	class MetalMaterial : public Material {
 	public:
-		MetalMaterial(const Color& albedo, double fuzz);
+		MetalMaterial(const Color& albedo, float fuzz);
 		virtual bool Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const override;
 
 	public:
 		Color m_albedo;
-		double m_fuzz;
+		float m_fuzz;
 	};
 
 }

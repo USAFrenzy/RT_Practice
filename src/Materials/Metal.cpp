@@ -3,7 +3,7 @@
 
 namespace rmrt {
 
-	MetalMaterial::MetalMaterial(const Color& albedo, double fuzz) : m_albedo(albedo), m_fuzz(fuzz < 1 ? fuzz : 1)
+	MetalMaterial::MetalMaterial(const Color& albedo, float fuzz) : m_albedo(albedo), m_fuzz(fuzz < 1 ? fuzz : 1)
 	{
 	}
 

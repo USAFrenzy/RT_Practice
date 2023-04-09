@@ -6,7 +6,7 @@ namespace rmrt {
 	{
 	}
 
-	Sphere::Sphere(Point3 center, double radius, std::shared_ptr<Material> material) : m_center(center), m_radius(radius), m_materialPtr(material)
+	Sphere::Sphere(Point3 center, float radius, std::shared_ptr<Material> material) : m_center(center), m_radius(radius), m_materialPtr(material)
 	{
 	}
 
@@ -24,17 +24,17 @@ namespace rmrt {
 		return m_center;
 	}
 
-	void Sphere::SetRadius(const double& radius)
+	void Sphere::SetRadius(const float& radius)
 	{
 		m_radius = radius;
 	}
 
-	const double& Sphere::GetRadius() const
+	const float& Sphere::GetRadius() const
 	{
 		return m_radius;
 	}
 
-	bool Sphere::Hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const
+	bool Sphere::Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const
 	{
 		Vec3 originCenter{ ray.Origin() - m_center };
 		// Both 'a' and 'c' were simplified in module 6.2 due to the vector attribute that states: 

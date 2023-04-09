@@ -8,11 +8,11 @@ namespace rmrt {
 	{
 	public:
 		Camera();
-		Camera(double aspectRatio, double viewPortHeight, double viewPortWidth, double focalLength);
+		Camera(float aspectRatio, float viewPortHeight, float viewPortWidth, float focalLength);
 		~Camera();
 
-		Ray GetRay(double u, double v) const;
-		void SetFocalLength(double focalLength);
+		Ray GetRay(float u, float v) const;
+		void SetFocalLength(float focalLength);
 
 
 	private:

@@ -3,46 +3,61 @@
 #include <RMRT/Objects/HittableList.h>
 #include <RMRT/Objects/Sphere.h>
 #include <RMRT/Camera/Camera.h>
-#include <RMRT/Materials/Material.h>
+#include <RMRT/Materials/Lambertian.h>
 #include <RMRT/Materials/Metal.h>
+#include <RMRT/Materials/Dielectric.h>
 #include <RMRT/Image/Image.h>
 
 #include <iostream>
+#include <chrono>
+
+// NOTE TO SELF: In cmake generation, set "/arch:AVX2" since I'm running this on a 10900k desktop and a 10750H laptop cpu
 
 int main()
 {
 	using namespace rmrt;
 
 	// Image
-	constexpr auto aspectRatio{ 16.0 / 9.0 };  // 16:9
+	constexpr auto aspectRatio{ 16.0f / 9.0f };  // 16:9
 	constexpr int defaultWidth{ 400 };
-	constexpr int hdWidth{ 1920 };
-	constexpr int qhdWidth{ 2560 };
-	constexpr int uhdWidth{ 3840 };
+	constexpr int sdWidth{ 480}; // 360p
+	constexpr int fsdWidth{ 640}; // 480p
+	constexpr int hdWidth{ 1280 }; // 720p
+	constexpr int fhdWidth{ 1920 }; // 1080p
+	constexpr int qhdWidth{ 2560 }; // 1440p
+	constexpr int uhdWidth{ 3840 }; // 4k
 
-	Image image("image.ppm", aspectRatio, qhdWidth); // uses default RTIOW settings
-	image.SetDimensions(qhdWidth);
-	image.SetRaySampleCount(10000);
-	image.SetDiffuseRayCount(1000);
+	Image image("4k_HighSampleTest.ppm", aspectRatio, defaultWidth); // uses default RTIOW settings
+	image.SetDimensions(uhdWidth);
+	image.SetRaySampleCount(10'000);
+	image.SetDiffuseRayCount(500);
 
 	// World
 	HittableList world{};
 
-	auto materialGround{ std::make_shared<Lambertian>(colorMap[TempColor::greenish]) };
-	auto materialCenter{ std::make_shared<Lambertian>(colorMap[TempColor::pink]) };
-	auto materialLeft{ std::make_shared<MetalMaterial>(colorMap[TempColor::bluish], 0.2) };
-	auto materialRight{ std::make_shared<MetalMaterial>(colorMap[TempColor::goldish], 1.0) };
+	auto materialGround{ std::make_shared<LambertianMaterial>(colorMap[TempColor::greenish]) };
+	auto materialCenter{ std::make_shared<LambertianMaterial>(colorMap[TempColor::pink]) };
+	auto materialLeft{ std::make_shared<MetalMaterial>(colorMap[TempColor::bluish], 0.8f) };
+	auto materialRight{ std::make_shared<MetalMaterial>(colorMap[TempColor::goldish], 0.25f) };
+	auto materialGlass{ std::make_shared<DielectricMaterial>(1.5f) };
 
-	world.Store(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100, materialGround));
-	world.Store(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, materialCenter));
-	world.Store(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
-	world.Store(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, materialRight));
+	world.Store(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f, materialGround));
+	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, materialCenter));
+	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
+	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+
 
 	// Camera
 	Camera camera{};
-	camera.SetFocalLength(1.25);
+	camera.SetFocalLength(1.1f);
 
 	// Render
+	auto begin {std::chrono::steady_clock::now()};
 	image.TraceImage(camera, world);
+	auto end { std::chrono::steady_clock::now() };
+	auto elapsed {std::chrono::duration_cast<std::chrono::seconds>(end-begin)};
+	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
 
 }

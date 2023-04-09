@@ -14,7 +14,7 @@ namespace rmrt {
 		Point3 p;
 		Vec3 normal;
 		std::shared_ptr<Material> materialPtr;
-		double t;
+		float t;
 		bool frontFace;
 
 		// This function simply compares whether or not the vector in question points with or against the ray direction and
@@ -29,6 +29,6 @@ namespace rmrt {
 	class HittableObject
 	{
 	public:
-		virtual bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const = 0;
+		virtual bool Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const = 0;
 	};
 }

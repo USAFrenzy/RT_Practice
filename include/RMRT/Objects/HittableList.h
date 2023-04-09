@@ -17,7 +17,7 @@ namespace rmrt {
 
 		void Clear();
 		void Store(std::shared_ptr<HittableObject> object);
-		virtual bool Hit(const Ray& ray, double tmin, double tMax, HitRecord& record) const;
+		virtual bool Hit(const Ray& ray, float tmin, float tMax, HitRecord& record) const;
 
 	private:
 		HittableObjectList m_objects;

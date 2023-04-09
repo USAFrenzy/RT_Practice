@@ -11,8 +11,8 @@ namespace rmrt {
 
 		Point3 Origin() const;
 		Vec3 Direction () const;
-		Point3 At(double t) const;
-		double SphereHit(const Point3& center, double radius, const Ray& r);
+		Point3 At(float t) const;
+		float SphereHit(const Point3& center, float radius, const Ray& r);
 			
 	private:
 		Point3 m_origin;

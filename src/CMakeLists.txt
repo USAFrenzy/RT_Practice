@@ -15,6 +15,8 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Image/Image.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Material.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Metal.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Materials/Lambertian.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Materials/Dielectric.h"
 )
 
 set(RMRT_SOURCES 
@@ -23,8 +25,9 @@ set(RMRT_SOURCES
     "Objects/Sphere.cpp"
     "Objects/HittableList.cpp"
     "Camera/Camera.cpp"
-    "Materials/Material.cpp"
     "Materials/Metal.cpp"
+    "Materials/Lambertian.cpp"
+    "Materials/Dielectric.cpp"
     "Image/Image.cpp"
 )
 

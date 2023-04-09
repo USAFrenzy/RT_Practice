@@ -25,7 +25,7 @@ namespace rmrt {
 		m_objects.emplace_back(std::move(object));
 	}
 
-	bool HittableList::Hit(const Ray& ray, double tmin, double tMax, HitRecord& record) const
+	bool HittableList::Hit(const Ray& ray, float tmin, float tMax, HitRecord& record) const
 	{
 		HitRecord tempRecord;
 		bool isHit{ false };
@@ -69,8 +69,8 @@ namespace rmrt {
 	Color RayColor(const Ray& ray, const HittableObject& worldObject, int depth)
 	{
 		HitRecord record;
-		if (depth <= 0) return colorMap[TempColor::black];
-		if (worldObject.Hit(ray, 0.001, infinity, record)) {
+		if (depth <= 0.0f) return colorMap[TempColor::black];
+		if (worldObject.Hit(ray, 0.001f, infinity, record)) {
 			Ray scattered;
 			Color attenuation;
 			if (record.materialPtr->Scatter(ray, record, attenuation, scattered))
@@ -78,11 +78,11 @@ namespace rmrt {
 				return attenuation * RayColor(scattered, worldObject, depth - 1);
 			}
 			Point3 target{ record.p + record.normal + RandomUnitVector() };
-			return 0.5 * RayColor(Ray(record.p, target - record.p), worldObject, depth - 1);
+			return 0.5f * RayColor(Ray(record.p, target - record.p), worldObject, depth - 1);
 		}
 		Vec3 unitDirection{ UnitVector(ray.Direction()) };
-		auto	t = 0.5 * (unitDirection.Y() + 1.0);
-		return ((1.0 - t) * colorMap[TempColor::white]) + (t * colorMap[TempColor::blue]);
+		auto	t = 0.5f * (unitDirection.Y() + 1.0f);
+		return ((1.0f - t) * colorMap[TempColor::white]) + (t * colorMap[TempColor::blue]);
 	}
 
 }

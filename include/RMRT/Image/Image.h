@@ -7,6 +7,7 @@
 #include<algorithm>
 #include<execution>
 #include <vector>
+#include <array>
 
 #include <string>
 #include <fstream>
@@ -17,7 +18,7 @@ namespace rmrt {
 	class Image
 	{
 	public:
-		Image(std::string fileName, double aspectRatio, int width);
+		Image(std::string fileName, float aspectRatio, int width);
 		~Image();
 
 		void SetDimensions(int width, int height = 0);
@@ -26,20 +27,23 @@ namespace rmrt {
 		void WriteHeaderPPM();
 		void SetRaySampleCount(int numberOfSamples);
 		void SetDiffuseRayCount(int numberOfRays);
+		void ScaleVecViaClamp(Vec3& vec, float min, float max);
 		Color RaySamples(const Camera& camera, const HittableList& world, int horizontalPixel, int verticalPixel);
 		void WriteColor(const rmrt::Color& pixelColor);
 		void TraceImage(const Camera& camera, const HittableList& world);
 
 	private:
 		std::string m_name;
-		double m_aspectRatio;
+		float m_aspectRatio;
 		int m_width;
 		int m_height;
 		int m_maxDiffuseRays;
 		int m_samplesPerPixel;
 		std::vector<int> m_samplesIter;
-		std::ofstream file;
-		std::string fileTempBuff{};
+		std::ofstream m_file;
+		//std::string fileTempBuff{};
+		std::array<char, 16> m_buffer{};
+		float m_scale;
 	};
 
 }
