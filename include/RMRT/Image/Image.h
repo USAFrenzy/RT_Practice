@@ -18,7 +18,7 @@ namespace rmrt {
 	class Image
 	{
 	public:
-		Image(std::string fileName, float aspectRatio, int width);
+		Image(std::string_view fileName, float aspectRatio, int width);
 		~Image();
 
 		void SetDimensions(int width, int height = 0);
@@ -29,6 +29,8 @@ namespace rmrt {
 		void SetDiffuseRayCount(int numberOfRays);
 		void ScaleVecViaClamp(Vec3& vec, float min, float max);
 		Color RaySamples(const Camera& camera, const HittableList& world, int horizontalPixel, int verticalPixel);
+		int RaySampleCount();
+		int DiffuseRayCount();
 		void WriteColor(const rmrt::Color& pixelColor);
 		void TraceImage(const Camera& camera, const HittableList& world);
 

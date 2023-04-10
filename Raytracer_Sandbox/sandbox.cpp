@@ -27,9 +27,10 @@ int main()
 	constexpr int qhdWidth{ 2560 }; // 1440p
 	constexpr int uhdWidth{ 3840 }; // 4k
 
-	Image image("4k_HighSampleTest.ppm", aspectRatio, defaultWidth); // uses default RTIOW settings
-	image.SetDimensions(uhdWidth);
-	image.SetRaySampleCount(10'000);
+	constexpr std::string_view fileName {"HighSample1080pRender.ppm"};
+	Image image(fileName, aspectRatio, defaultWidth); // uses default RTIOW settings
+	image.SetDimensions(fhdWidth);
+	image.SetRaySampleCount(100'000);
 	image.SetDiffuseRayCount(500);
 
 	// World
@@ -46,7 +47,9 @@ int main()
 	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
 	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
 	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.35f, -0.78f), -0.135f, materialGlass));
 	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+
 
 
 	// Camera
@@ -54,6 +57,8 @@ int main()
 	camera.SetFocalLength(1.1f);
 
 	// Render
+	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName <<"'\n" 
+		<< "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] " << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";
 	auto begin {std::chrono::steady_clock::now()};
 	image.TraceImage(camera, world);
 	auto end { std::chrono::steady_clock::now() };

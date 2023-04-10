@@ -6,13 +6,13 @@
 
 namespace rmrt {
 
-	Image::Image(std::string fileName, float aspectRatio, int width)
+	Image::Image(std::string_view fileName, float aspectRatio, int width)
 		: m_name(fileName), m_aspectRatio(aspectRatio), m_width(width), m_height(static_cast<int>(width / aspectRatio)),
 		m_maxDiffuseRays(50), m_samplesPerPixel(100), m_samplesIter(std::vector<int>{}), m_file(std::ofstream{}), m_scale(1.0f / m_samplesPerPixel)
 	{
 		m_samplesIter.resize(m_samplesPerPixel);
 		for (auto& pos : m_samplesIter) m_samplesIter[pos] = pos;
-		m_file.open(fileName, std::ios_base::trunc);
+		m_file.open(fileName.data(), std::ios_base::trunc);
 		WriteHeaderPPM();
 	}
 
@@ -97,7 +97,6 @@ namespace rmrt {
 	}
 
 	void Image::TraceImage(const Camera& camera, const HittableList& world) {
-		std::cerr << "\n";
 		for (auto i{ m_height - 1 }; i >= 0; --i) {
 			// Adding a progress indicator
 			for (auto j{ 0 }; j < m_width; ++j) {
@@ -106,8 +105,6 @@ namespace rmrt {
 				WriteColor(RaySamples(camera, world, j, i));
 			}
 		}
-		// Progress completed
-		std::cerr << "\nDone.\n";
 	}
 
 	void Image::ScaleVecViaClamp(Vec3& vec, float min, float max) {
@@ -116,4 +113,10 @@ namespace rmrt {
 		vec.e[1] = rgb_factor * (vec.e[1]  < min ? min : vec.e[1] > max ? max : vec.e[1]);
 		vec.e[2] = rgb_factor * (vec.e[2]  < min ? min : vec.e[2] > max ? max : vec.e[2]);
 	}
+
+	int Image::RaySampleCount() { return m_samplesPerPixel; }
+
+	int Image::DiffuseRayCount() { return m_maxDiffuseRays; }
+
+
 }
