@@ -46,10 +46,10 @@ int main()
 	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, materialCenter));
 	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
 	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
-	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.35f, -0.78f), -0.13f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.35f, -0.78f), -0.13f, materialGlass));
+	//world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.35f, -0.78f), -0.15f, materialGlass));
+	//world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.35f, -0.78f), -0.15f, materialGlass));
 
 
 
