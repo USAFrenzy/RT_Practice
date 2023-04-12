@@ -6,17 +6,17 @@
 
 namespace rmrt {
 
-	float Vec3::X() const
+	[[nodiscard]] float Vec3::X() const noexcept
 	{
 		return e[0];
 	}
 
-	float Vec3::Y() const
+	[[nodiscard]] float Vec3::Y() const noexcept
 	{
 		return e[1];
 	}
 
-	float Vec3::Z() const
+	[[nodiscard]] float Vec3::Z() const noexcept
 	{
 		return e[2];
 	}
@@ -47,33 +47,33 @@ namespace rmrt {
 	*   Length =   v| (x^2) + (y^2 )+ (z^2)
 	*
 	*********************************************************************************************************************************/
-	float Vec3::Length() const
+	[[nodiscard]] float Vec3::Length() const noexcept
 	{
 		return std::sqrt(LengthSquared());
 	}
 
-	float Vec3::LengthSquared() const
+	[[nodiscard]] float Vec3::LengthSquared() const noexcept
 	{
 		return (e[0] * e[0]) + (e[1] * e[1]) + (e[2] * e[2]);
 	}
 
-	bool Vec3::NearZero() const
+	[[nodiscard]] bool Vec3::NearZero() const noexcept
 	{
 		const auto s = 1e-8;
 		return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
 	}
 
-	Vec3 Vec3::Random()
+	[[nodiscard]] Vec3 Vec3::Random() noexcept
 	{
 		return Vec3(RandomDouble(), RandomDouble(), RandomDouble());
 	}
 
-	Vec3 Vec3::Random(float min, float max)
+	[[nodiscard]] Vec3 Vec3::Random(float min, float max) noexcept
 	{
 		return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
 	}
 
-	Vec3 RandomInUnitSphere()
+	[[nodiscard]] Vec3 RandomInUnitSphere() noexcept
 	{
 		for (;;) {
 			auto p{ Vec3::Random(-1, 1) };
@@ -82,11 +82,11 @@ namespace rmrt {
 		}
 	}
 
-	void Vec3::Clear() {
+	void Vec3::Clear()  noexcept {
 		e[0] = e[1] = e[2] = 0.0;
 	}
 
-	Vec3 rmrt::RandomUnitVector()
+	[[nodiscard]]  Vec3 rmrt::RandomUnitVector() noexcept
 	{
 		// The original call called "UnitVector(RandomInUnitSphere())"; I believe just directly looping and dividing into 
 		// itself instead of producing a new register load and divide would be more effiecient as a low-hanging fruit here,
@@ -103,27 +103,27 @@ namespace rmrt {
 		}
 	}
 
-	Vec3 Reflect(const Vec3& v, const Vec3& n)
+	[[nodiscard]]  Vec3 Reflect(const Vec3& v, const Vec3& n) noexcept
 	{
 		return v - (2 * n * Dot(v, n));
 	}
 
-	Vec3 Vec3::operator-() const
+	[[nodiscard]] Vec3 Vec3::operator-() const noexcept
 	{
 		return Vec3(-e[0], -e[1], -e[2]);
 	}
 
-	float Vec3::operator[](int i) const
+	[[nodiscard]] float Vec3::operator[](int i) const noexcept
 	{
 		return e[i];
 	}
 
-	float& Vec3::operator[](int i)
+	[[nodiscard]] float& Vec3::operator[](int i) noexcept
 	{
 		return e[i];
 	}
 
-	Vec3& Vec3::operator+=(const Vec3& v)
+	Vec3& Vec3::operator+=(const Vec3& v) noexcept
 	{
 		e[0] += v.e[0];
 		e[1] += v.e[1];
@@ -131,7 +131,7 @@ namespace rmrt {
 		return *this;
 	}
 
-	Vec3& Vec3::operator*=(const float t)
+	[[nodiscard]] Vec3& Vec3::operator*=(const float t) noexcept
 	{
 		e[0] *= t;
 		e[1] *= t;
@@ -139,49 +139,54 @@ namespace rmrt {
 		return *this;
 	}
 
-	Vec3& Vec3::operator/=(const float t)
+	[[nodiscard]] Vec3& Vec3::operator/=(const float t) noexcept
 	{
 		return *this *= 1 / t;
 	}
 
 	// The utility functions
-	std::ostream& operator<<(std::ostream& out, const Vec3& v)
+	std::ostream& operator<<(std::ostream& out, const Vec3& v) noexcept
 	{
 		return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
 	}
 
-	Vec3 operator+(const Vec3& u, const Vec3& v)
+	[[nodiscard]] Vec3 operator+(const Vec3& u, const Vec3& v) noexcept
 	{
 		return Vec3(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2]);
 	}
 
-	Vec3 operator-(const Vec3& u, const Vec3& v)
+	[[nodiscard]] Vec3 operator-(const Vec3& u, const Vec3& v) noexcept
 	{
 		return Vec3(u.e[0] - v.e[0], u.e[1] - v.e[1], u.e[2] - v.e[2]);
 	}
 
-	Vec3 operator*(const Vec3& u, const Vec3& v)
+	[[nodiscard]] Vec3 operator*(const Vec3& u, const Vec3& v) noexcept
 	{
 		return Vec3(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2]);
 	}
 
-	Vec3 operator*(float t, const Vec3& v)
+	[[nodiscard]] Vec3 operator*(float t, const Vec3& v) noexcept
 	{
 		return Vec3(t * v.e[0], t * v.e[1], t * v.e[2]);
 	}
 
-	Vec3 operator*(const Vec3& v, float t)
+	[[nodiscard]] Vec3 operator*(int t, const Vec3& v) noexcept
+	{
+		return Vec3(t * v.e[0], t * v.e[1], t * v.e[2]);
+	}
+
+	[[nodiscard]] Vec3 operator*(const Vec3& v, float t) noexcept
 	{
 		return t * v;
 	}
 
-	Vec3 operator/(Vec3 v, float t)
+	[[nodiscard]] Vec3 operator/(Vec3 v, float t) noexcept
 	{
 		return (1 / t) * v;
 	}
 
 	// Scalar
-	float Dot(const Vec3& u, const Vec3& v)
+	[[nodiscard]]  float Dot(const Vec3& u, const Vec3& v) noexcept
 	{
 		return (u.e[0] * v.e[0]) + (u.e[1] * v.e[1]) + (u.e[2] * v.e[2]);
 	}
@@ -202,7 +207,7 @@ namespace rmrt {
 	*     a  x  b  =  ((( b1*c2)-(c1*b2) )* i) - ((( a1*c2)-(c1*a2) )* j)  + ((( a1*b2)-(b1*a2) )* k)
 	*  3) The only difference here, is that instead of the full calculation, we are just creating and returning a Vec3 object with the computed values.
 	*************************************************************************************************************************/
-	Vec3 Cross(const Vec3& u, const Vec3& v)
+	[[nodiscard]]  Vec3 Cross(const Vec3& u, const Vec3& v) noexcept
 	{
 		return Vec3(
 			((u.e[1] * v.e[2]) - (u.e[2] * v.e[1])),
@@ -211,7 +216,7 @@ namespace rmrt {
 		);
 	}
 
-	Vec3  UnitVector(Vec3 v)
+	[[nodiscard]]  Vec3  UnitVector(Vec3 v) noexcept
 	{
 		return v / v.Length();
 	}
@@ -223,7 +228,7 @@ namespace rmrt {
 	//    This now leaves us with two ray functions: A) R' = n/n'(R + cos0*n)   and   B) R'|| = - sqrt(1 - |R'|_ |^2*n)
 	// 2) The dot product between two vectors can be simplified as the cosine angle between them to get: a*b = cos0
 	// 3) This leaves the final equation as: R'|_ = n/n' * (R + (-R*n)*n)
-	Vec3 rmrt::Refract(const Vec3& uv, const Vec3& n, float etai_over_etat)
+	[[nodiscard]]  Vec3 rmrt::Refract(const Vec3& uv, const Vec3& n, float etai_over_etat) noexcept
 	{
 		auto cosineTheta{ fmin(Dot(-uv, n), 1.0f) };
 		Vec3 perpendicularRayOut{ etai_over_etat * (uv + (cosineTheta * n)) };
@@ -231,5 +236,9 @@ namespace rmrt {
 		return perpendicularRayOut += parallelRayOut;
 	}
 
+	[[nodiscard]]  rmrt::Color rmrt::Lerp(int t, const rmrt::Color& c1, const rmrt::Color& c2) noexcept
+	{
+		return (1-t)*c1 + t*c2;
+	}
 
 }

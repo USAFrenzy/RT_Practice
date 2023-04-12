@@ -9,23 +9,23 @@ namespace rmrt {
 	public:
 		Vec3() :e{ 0,0,0 } {}
 		Vec3(float e0, float e1, float e2) :e{ e0, e1, e2 } {}
-		float X() const;
-		float Y() const;
-		float Z() const;
-		float Length() const;
-		float LengthSquared() const;
-		bool NearZero() const;
-		void Clear();
-		static Vec3 Random();
-		static Vec3 Random(float min, float max);
+		void Clear() noexcept;
+		[[nodiscard]] float X() const noexcept;
+		[[nodiscard]] float Y() const noexcept;
+		[[nodiscard]] float Z() const noexcept;
+		[[nodiscard]] float Length() const noexcept;
+		[[nodiscard]] float LengthSquared() const noexcept;
+		[[nodiscard]] bool NearZero() const noexcept;
+		[[nodiscard]] static Vec3 Random() noexcept;
+		[[nodiscard]] static Vec3 Random(float min, float max) noexcept;
 
 		// operator overloads
-		Vec3 operator-() const;
-		float operator[](int i) const;
-		float& operator[](int i);
-		Vec3& operator +=(const Vec3& v);
-		Vec3& operator*=(const float t);
-		Vec3& operator/=(const float t);
+		[[nodiscard]] Vec3 operator-() const noexcept;
+		[[nodiscard]] float operator[](int i) const noexcept;
+		[[nodiscard]] float& operator[](int i) noexcept;
+		Vec3& operator +=(const Vec3& v)noexcept;
+		[[nodiscard]] Vec3& operator*=(const float t)noexcept;
+		[[nodiscard]] Vec3& operator/=(const float t)noexcept;
 
 	public:
 		float e[3];
@@ -36,19 +36,21 @@ namespace rmrt {
 	using Color = Vec3;
 
 	// The utility functions for Vec3
-	std::ostream& operator<<(std::ostream& out, const Vec3& v);
-	Vec3 operator+(const Vec3& u, const Vec3& v);
-	Vec3 operator-(const Vec3& u, const Vec3& v);
-	Vec3 operator*(const Vec3& u, const Vec3& v);
-	Vec3 operator*(float t, const Vec3& v);
-	Vec3 operator*(const Vec3& v, float t);
-	Vec3 operator/(Vec3 v, float t);
+	std::ostream& operator<<(std::ostream& out, const Vec3& v)noexcept;
+	[[nodiscard]] Vec3 operator+(const Vec3& u, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 operator-(const Vec3& u, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 operator*(const Vec3& u, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 operator*(float t, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 operator*(int t, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 operator*(const Vec3& v, float t) noexcept;
+	[[nodiscard]] Vec3 operator/(Vec3 v, float t) noexcept;
 
-	float Dot(const Vec3& u, const Vec3& v);
-	Vec3 Cross(const Vec3& u, const Vec3& v);
-	Vec3 UnitVector(Vec3 v);
-	Vec3 RandomInUnitSphere();
-	Vec3 RandomUnitVector();
-	Vec3 Reflect(const Vec3& v, const Vec3& n);
-	Vec3 Refract(const Vec3& uv, const Vec3& n, float etai_over_etat);
+	[[nodiscard]] float Dot(const Vec3& u, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 Cross(const Vec3& u, const Vec3& v) noexcept;
+	[[nodiscard]] Vec3 UnitVector(Vec3 v) noexcept;
+	[[nodiscard]] Vec3 RandomInUnitSphere() noexcept;
+	[[nodiscard]] Vec3 RandomUnitVector() noexcept;
+	[[nodiscard]] Vec3 Reflect(const Vec3& v, const Vec3& n) noexcept;
+	[[nodiscard]] Vec3 Refract(const Vec3& uv, const Vec3& n, float etai_over_etat) noexcept;
+	[[nodiscard]] Color Lerp(int t, const Color& c1, const Color& c2) noexcept;
 }

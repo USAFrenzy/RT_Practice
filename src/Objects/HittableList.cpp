@@ -75,14 +75,15 @@ namespace rmrt {
 			Color attenuation;
 			if (record.materialPtr->Scatter(ray, record, attenuation, scattered))
 			{
-				return attenuation * RayColor(scattered, worldObject, depth - 1);
+				return attenuation * RayColor(scattered, worldObject, --depth);
 			}
 			Point3 target{ record.p + record.normal + RandomUnitVector() };
-			return 0.5f * RayColor(Ray(record.p, target - record.p), worldObject, depth - 1);
+			return 0.5f * RayColor(Ray(record.p, target - record.p), worldObject, --depth);
 		}
-		Vec3 unitDirection{ UnitVector(ray.Direction()) };
+		auto rayDirection {ray.Direction()};
+		Vec3 unitDirection{ (rayDirection/rayDirection.Length()) };
 		auto	t = 0.5f * (unitDirection.Y() + 1.0f);
-		return ((1.0f - t) * colorMap[TempColor::white]) + (t * colorMap[TempColor::blue]);
+		return Lerp(1, colorMap[TempColor::white], colorMap[TempColor::blue] );
 	}
 
 }

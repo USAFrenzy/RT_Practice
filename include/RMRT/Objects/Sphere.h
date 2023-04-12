@@ -21,6 +21,8 @@ namespace rmrt {
 	private:
 		Point3 m_center;
 		float m_radius;
+		float m_radiusSquared;
+		float m_lengthSquared;
 		std::shared_ptr<Material> m_materialPtr;
 	};
 }
