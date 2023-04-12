@@ -29,9 +29,9 @@ int main()
 
 	constexpr std::string_view fileName {"360pRender.ppm"};
 	Image image(fileName, aspectRatio, defaultWidth); // uses default RTIOW settings
-	image.SetDimensions(fsdWidth);
-	image.SetRaySampleCount(250);
-	image.SetDiffuseRayCount(400);
+	//image.SetDimensions(fsdWidth);
+	image.SetRaySampleCount(50);
+	image.SetDiffuseRayCount(40);
 
 	// World
 	HittableList world{};
@@ -46,10 +46,10 @@ int main()
 	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, materialCenter));
 	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
 	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
-	//world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.35f, -0.78f), -0.15f, materialGlass));
-	//world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.35f, -0.78f), -0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.12f, -0.65f), 0.1f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.12f, -0.65f), 0.1f, materialGlass));
 
 
 
