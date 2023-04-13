@@ -27,11 +27,19 @@ int main()
 	constexpr int qhdWidth{ 2560 }; // 1440p
 	constexpr int uhdWidth{ 3840 }; // 4k
 
-	constexpr std::string_view fileName {"360pRender.ppm"};
-	Image image(fileName, aspectRatio, defaultWidth); // uses default RTIOW settings
-	//image.SetDimensions(fsdWidth);
-	image.SetRaySampleCount(50);
-	image.SetDiffuseRayCount(40);
+	constexpr std::string_view fileName {"default.ppm"};
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Creating the render context; this portion and this class isn't a part of the tutorial
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// uses default RTIOW settings, this is here if the below lines regarding the image 
+	// context are commented out so as to keep to the original image render
+	Image image(fileName, aspectRatio, defaultWidth); 
+	
+	//image.SetDimensions(qhdWidth);
+	//image.SetRaySampleCount(10'000);
+	//image.SetDiffuseRayCount(1250);
 
 	// World
 	HittableList world{};
@@ -46,16 +54,20 @@ int main()
 	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, materialCenter));
 	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
 	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
-	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.38f, -0.78f), 0.145f, materialGlass));
 	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.12f, -0.65f), 0.1f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.4f, -0.78f), 0.15f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.38f, -0.78f), 0.145f, materialGlass));
 	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.12f, -0.65f), 0.1f, materialGlass));
 
 
 
 	// Camera
-	Camera camera{};
-	camera.SetFocalLength(1.1f);
+	auto lookFrom { Point3(0, 0, 1) };
+	auto lookAt{ Point3(0, 0, -1) };
+	auto vertUp {Vec3(0, 1, 0)};
+	auto fov {60.0f};
+
+	Camera camera{lookFrom, lookAt, vertUp, fov, aspectRatio};
 
 	// Render
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName <<"'\n" 

@@ -14,7 +14,8 @@
 
 namespace rmrt {
 	// I don't know if the tutorial does this yet, but I wanted to abstract away a lot of the photo rendering 
-	// stuff into it's own class --> will be moving the free functions here as well I believe
+	// stuff into it's own class --> will be moving the free functions here as well I believe, or at the very least,
+	// I'll be adding an image library and wrapping its functionality from within this class to be used.
 	class Image
 	{
 	public:
@@ -43,7 +44,6 @@ namespace rmrt {
 		int m_samplesPerPixel;
 		std::vector<int> m_samplesIter;
 		std::ofstream m_file;
-		//std::string fileTempBuff{};
 		std::array<char, 16> m_buffer{};
 		float m_scale;
 	};

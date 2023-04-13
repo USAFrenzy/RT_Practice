@@ -68,7 +68,7 @@ namespace rmrt {
 	Color Image::RaySamples(const Camera& camera, const HittableList& world, int horizontalPixel, int verticalPixel) {
 		Color pixelColor(0, 0, 0);
 		std::for_each(std::execution::par, m_samplesIter.begin(), m_samplesIter.end(), [&](auto samples) {
-			// 'u' and 'v' are the superimposed axes over the camera viewport axes
+			// 'u' and 'v' are the superimposed axes over the camera view port axes
 			auto u{ (horizontalPixel + RandomDouble()) / m_width };
 			auto v{ (verticalPixel + RandomDouble()) / m_height };
 			Ray ray{ camera.GetRay(u, v) };
@@ -83,7 +83,8 @@ namespace rmrt {
 		std::memset(data, '\0', 16);
 		Vec3 rgbVec{ pixelColor };
 		ScaleVecViaClamp(rgbVec, 0.0f, 0.999f);
-
+		// Eventually, for shits and giggles, this will be mapped to a 2D array that will be the size of the image and once the render is 
+		// finished, the contents of the 2D array will be written to the file directly instead of writing to the file and flushing every call
 		auto pos{ std::to_chars(data, data + 16, static_cast<int>(rgbVec.X())).ptr - data };
 		m_buffer[pos] = ' ';
 		++pos;
@@ -96,11 +97,15 @@ namespace rmrt {
 		m_file.flush();
 	}
 
+	// This currently uses parallel execution for the pixel sampling, however, parallelizing on scan-line height 
+	// would be better suited here -> instead of using std::for_each, it might be better to use std::jthreads here.
+	// This also means that writing the pixel color to either the file or a 2D array as noted above will need to 
+	// ensure that no data races occur when synchronizing the result from each thread.
 	void Image::TraceImage(const Camera& camera, const HittableList& world) {
 		for (auto i{ m_height - 1 }; i >= 0; --i) {
 			// Adding a progress indicator
 			for (auto j{ 0 }; j < m_width; ++j) {
-				std::cerr << "\rScanlines Remaining: " << i
+				std::cerr << "\rScan-lines Remaining: " << i
 					<< "    " << "Current Pixel: [ " << j + 1 << " / " << m_width << " ]" << "  " << std::flush;
 				WriteColor(RaySamples(camera, world, j, i));
 			}
