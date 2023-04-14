@@ -65,9 +65,11 @@ int main()
 	auto lookFrom { Point3(0, 0, 1) };
 	auto lookAt{ Point3(0, 0, -1) };
 	auto vertUp {Vec3(0, 1, 0)};
-	auto fov {60.0f};
+	auto fov {55.0f};
+	auto dof {1.0f};
+	auto aperture {0.0f}; //  '0.0f'  effectively disables depth of field effect
 
-	Camera camera{lookFrom, lookAt, vertUp, fov, aspectRatio};
+	Camera camera{lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, dof};
 
 	// Render
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName <<"'\n" 

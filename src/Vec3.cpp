@@ -34,10 +34,10 @@ namespace rmrt {
 	*
 	*   2) To find the final length value given vector points, we plot the points on the graph
 	*   3) We have the height of the vector triangle as our 'z' axis and the width of our vector triangle as our 'x' or 'y' axis
-	*   4) To solve for the hypotenuse, our vector legnth, we need to first find the base value of our vector triangle
+	*   4) To solve for the hypotenuse, our vector length, we need to first find the base value of our vector triangle
 	*   5) To solve for the base value, we need to create an intermediary right triangle using the other points of our vector
-	*   6) We then solve for the intermediatary right triangle formed between the graphs at origin ---> x  ---> y
-	*   7) Once we found the hypotenuse value of the intermediatary right triangle, that becomes the base of the vector triangle
+	*   6) We then solve for the intermediary right triangle formed between the graphs at origin ---> x  ---> y
+	*   7) Once we found the hypotenuse value of the intermediary right triangle, that becomes the base of the vector triangle
 	*   8) The formula then becomes:
 	*                _____________________________________________
 	*     Length =   | (    _____________  )^2
@@ -89,10 +89,10 @@ namespace rmrt {
 	[[nodiscard]]  Vec3 rmrt::RandomUnitVector() noexcept
 	{
 		// The original call called "UnitVector(RandomInUnitSphere())"; I believe just directly looping and dividing into 
-		// itself instead of producing a new register load and divide would be more effiecient as a low-hanging fruit here,
+		// itself instead of producing a new register load and divide would be more efficient as a low-hanging fruit here,
 		// however, the extra variable used to store the length squared result might negate that change. At the same time 
 		// though, it should be a net-benefit since the original loop would have basically called LengthSquared() twice 
-		// before taking the sqaure root anyways.
+		// before taking the square root anyways.
 
 		// return UnitVector(RandomInUnitSphere());
 
@@ -100,6 +100,15 @@ namespace rmrt {
 			auto p{ Vec3::Random(-1, 1) };
 			if (const auto result{ p.LengthSquared() }; result < 1.0) 	return p /= std::sqrt(result);
 			continue;
+		}
+	}
+
+	Vec3 rmrt::RandomInUnitDisc() noexcept
+	{
+		for (;;) {
+			auto p {Vec3(RandomDouble(-1, 1), RandomDouble(-1,1), 0.0f)};
+			if(p.LengthSquared() >= 1.0f) continue;
+			return p;
 		}
 	}
 
@@ -200,7 +209,7 @@ namespace rmrt {
 	*       i  j  k
 	*     | a1  b1  c1  |
 	*     | a2  b2  c2  |
-	*  2) We then find the determinates by taking each component multiplied by its respective 2D matrix by x-multiplying
+	*  2) We then find the determinants by taking each component multiplied by its respective 2D matrix by x-multiplying
 	*     (subtracting the second term from the first) each 2D matrix by the corresponding 3D component factor:
 	*     (  |  b1  c1  |        )      (  |  a1  c1  |         )     (  |  a1  b1  |  )         )
 	*     (  |  b2  c2  |  * i   )   -  (  |  a2  c2  |   *  j  )  +  (  |  a2  b2  |  )   *  k  )   ---->

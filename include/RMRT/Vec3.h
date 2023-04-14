@@ -49,6 +49,7 @@ namespace rmrt {
 	[[nodiscard]] Vec3 Cross(const Vec3& u, const Vec3& v) noexcept;
 	[[nodiscard]] Vec3 UnitVector(Vec3 v) noexcept;
 	[[nodiscard]] Vec3 RandomInUnitSphere() noexcept;
+	[[nodiscard]] Vec3 RandomInUnitDisc() noexcept;
 	[[nodiscard]] Vec3 RandomUnitVector() noexcept;
 	[[nodiscard]] Vec3 Reflect(const Vec3& v, const Vec3& n) noexcept;
 	[[nodiscard]] Vec3 Refract(const Vec3& uv, const Vec3& n, float etai_over_etat) noexcept;
