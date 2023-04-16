@@ -20,6 +20,8 @@ option(
     OFF
 )
 
+set(VENDOR_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/include")
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 if (BUILD_SANDBOX)

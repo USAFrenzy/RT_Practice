@@ -13,11 +13,23 @@
 #include <fstream>
 
 namespace rmrt {
-	// I don't know if the tutorial does this yet, but I wanted to abstract away a lot of the photo rendering 
-	// stuff into it's own class --> will be moving the free functions here as well I believe, or at the very least,
-	// I'll be adding an image library and wrapping its functionality from within this class to be used.
+
+	namespace img_helper {
+		constexpr int BUFF_SIZE = 16;
+	}
+
 	class Image
 	{
+
+		struct ProgressTracker {
+			double m_hours {0};
+			double m_minutes {0};
+			double m_seconds{0};
+			void EstimateTimeLeft(int currentScanLine,int totalScanLines,const  std::chrono::steady_clock::time_point& startTime);
+			std::string TimeLeftStr(int currentScanLine, int totalScanLines, const std::chrono::steady_clock::time_point& startTime);
+			void PrintProgress(int totalScanLines, int totalWidth, int pixelX, int pixelY, const std::chrono::steady_clock::time_point& startTime);
+		};
+
 	public:
 		Image(std::string_view fileName, float aspectRatio, int width);
 		~Image();
@@ -32,8 +44,12 @@ namespace rmrt {
 		Color RaySamples(const Camera& camera, const HittableList& world, int horizontalPixel, int verticalPixel);
 		int RaySampleCount();
 		int DiffuseRayCount();
-		void WriteColor(const rmrt::Color& pixelColor);
+		void WriteColor(const rmrt::Color& pixelColor, int horizontalPixel, int verticalPixel);
 		void TraceImage(const Camera& camera, const HittableList& world);
+		void PrintImageToFile();
+
+	private:
+		void ResizeImageMatrix();
 
 	private:
 		std::string m_name;
@@ -44,8 +60,10 @@ namespace rmrt {
 		int m_samplesPerPixel;
 		std::vector<int> m_samplesIter;
 		std::ofstream m_file;
-		std::array<char, 16> m_buffer{};
+		std::array<char, img_helper::BUFF_SIZE> m_buffer{};
 		float m_scale;
+		ProgressTracker m_tracker;
+		std::vector<std::vector<std::string>> m_imgMatrix;
 	};
 
 }

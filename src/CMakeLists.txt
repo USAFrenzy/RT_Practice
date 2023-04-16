@@ -29,12 +29,7 @@ set(RMRT_SOURCES
     "Materials/Lambertian.cpp"
     "Materials/Dielectric.cpp"
     "Image/Image.cpp"
-)
-
-set(PCG_HEADERS
-############## PCG Random Number Generator Library ##############
-    "${CMAKE_SOURCE_DIR}/vendor/pcg/include/pcg_random.hpp"
-#################################################################
+    "RMRT.cpp"
 )
 
 source_group(
@@ -49,11 +44,11 @@ source_group(
     FILES ${RMRT_SOURCES}
 )
 
-set(RMRT_ALL_FILES ${RMRT_SOURCES} ${RMRT_HEADERS} ${PCG_HEADERS})
+set(RMRT_ALL_FILES ${RMRT_SOURCES} ${RMRT_HEADERS})
 
 add_library(${PROJECT_NAME} ${RMRT_ALL_FILES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${RMRT_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${RMRT_INCLUDE_DIR} ${VENDOR_INCLUDE_DIR})
 
 set(STANDARD 20)
 

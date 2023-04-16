@@ -6,13 +6,23 @@ namespace rmrt {
 
 	class Ray {
 	public:
-		Ray() {}
-		Ray(const Point3& origin, const Vec3& direction);
+		inline constexpr Ray() {}
+		inline constexpr Ray(const Point3& origin, const Vec3& direction) : m_origin(origin), m_direction(direction) {}
 
-		Point3 Origin() const;
-		Vec3 Direction () const;
-		Point3 At(float t) const;
-		float SphereHit(const Point3& center, float radius, const Ray& r);
+		inline constexpr const Point3& Origin() const
+		{
+			return m_origin;
+		}
+
+		inline constexpr const Vec3& Direction () const
+		{
+			return m_direction;
+		}
+
+		inline constexpr Point3 At(float t) const
+		{
+			return m_origin + (t * m_direction);
+		}
 			
 	private:
 		Point3 m_origin;

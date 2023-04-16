@@ -5,7 +5,7 @@
 
 namespace rmrt {
 
-	class Sphere : public HittableObject
+	class Sphere final : public HittableObject
 	{
 	public:
 		Sphere();
@@ -22,7 +22,6 @@ namespace rmrt {
 		Point3 m_center;
 		float m_radius;
 		float m_radiusSquared;
-		float m_lengthSquared;
 		std::shared_ptr<Material> m_materialPtr;
 	};
 }

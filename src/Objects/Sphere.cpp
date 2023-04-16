@@ -39,7 +39,7 @@ namespace rmrt {
 		Vec3 originCenter{ ray.Origin() - m_center };
 		// Both 'a' and 'c' were simplified in module 6.2 due to the vector attribute that states: 
 		// A vector dot with itself  == length^2 of that vector
-		// 'b' was simplified due to '2' cancelling out ==> discriminant and return check was simplified as well
+		// 'b' was simplified due to '2' canceling out ==> discriminant and return check was simplified as well
 		auto c{ originCenter.LengthSquared() - m_radiusSquared };
 		const auto& rayDirection {ray.Direction()};
 		auto a{ rayDirection.LengthSquared() };
@@ -48,7 +48,7 @@ namespace rmrt {
 		if (discriminant < 0) return false;
 		auto sqrtDiscriminant{ std::sqrt(discriminant) };
 
-		// The new portion as of module 6.3, the following finds the nearest root that lies within the min/max range paramaters
+		// The new portion as of module 6.3, the following finds the nearest root that lies within the min/max range parameters
 		auto root{ (-bHalf - sqrtDiscriminant) / a };
 		if (root < tMin || tMax < root) {
 			root = (-bHalf + sqrtDiscriminant) / a;

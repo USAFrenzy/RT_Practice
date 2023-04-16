@@ -1,6 +1,7 @@
 #pragma once
 
 #include <RMRT/RMRT.h>
+#include <RMRT/Ray.h>
 
 namespace rmrt {
 

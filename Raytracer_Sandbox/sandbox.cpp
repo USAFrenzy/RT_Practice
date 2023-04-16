@@ -11,23 +11,29 @@
 #include <iostream>
 #include <chrono>
 
-// NOTE TO SELF: In cmake generation, set "/arch:AVX2" since I'm running this on a 10900k desktop and a 10750H laptop cpu
+// NOTE TO SELF: In cmake generation, set "/arch:AVX2" since I'm running this on a 10900k desktop and a 10750H laptop CPU
+
+#define TOGGLE_TRUE_SANDBOX 0
+
 
 int main()
 {
+
 	using namespace rmrt;
 
-	// Image
-	constexpr auto aspectRatio{ 16.0f / 9.0f };  // 16:9
-	constexpr int defaultWidth{ 400 };
-	constexpr int sdWidth{ 480}; // 270p
-	constexpr int fsdWidth{ 640}; // 360p
-	constexpr int hdWidth{ 1280 }; // 720p
-	constexpr int fhdWidth{ 1920 }; // 1080p
-	constexpr int qhdWidth{ 2560 }; // 1440p
-	constexpr int uhdWidth{ 3840 }; // 4k
+	[[maybe_unused]] std::string_view fileName{ "sandbox.ppm" };
+	[[maybe_unused]] constexpr auto aspectRatio{ 16.0f / 9.0f };  // 16:9
+	[[maybe_unused]] constexpr int sdWidth{ 480 }; // 270p
+	[[maybe_unused]] constexpr int fsdWidth{ 640 }; // 360p
+	[[maybe_unused]] constexpr int hdWidth{ 1280 }; // 720p
+	[[maybe_unused]] constexpr int fhdWidth{ 1920 }; // 1080p
+	[[maybe_unused]] constexpr int qhdWidth{ 2560 }; // 1440p
+	[[maybe_unused]] constexpr int uhdWidth{ 3840 }; // 4k
 
-	constexpr std::string_view fileName {"default.ppm"};
+#if TOGGLE_TRUE_SANDBOX
+
+	// Image
+	[[maybe_unused]] constexpr int defaultWidth{ 400 };
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Creating the render context; this portion and this class isn't a part of the tutorial
@@ -37,9 +43,9 @@ int main()
 	// context are commented out so as to keep to the original image render
 	Image image(fileName, aspectRatio, defaultWidth); 
 	
-	//image.SetDimensions(qhdWidth);
-	//image.SetRaySampleCount(10'000);
-	//image.SetDiffuseRayCount(1250);
+	image.SetDimensions(fsdWidth);
+	image.SetRaySampleCount(1'000);
+	image.SetDiffuseRayCount(1550);
 
 	// World
 	HittableList world{};
@@ -54,10 +60,10 @@ int main()
 	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, materialCenter));
 	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
 	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
-	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.38f, -0.78f), 0.145f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.12f, -0.65f), 0.1f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.38f, -0.78f), 0.145f, materialGlass));
-	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.12f, -0.65f), 0.1f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.36f, -0.78f), 0.145f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.05f, -0.65f), 0.1f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.36f, -0.78f), 0.145f, materialGlass));
+	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.05f, -0.65f), 0.1f, materialGlass));
 
 
 
@@ -79,5 +85,42 @@ int main()
 	auto end { std::chrono::steady_clock::now() };
 	auto elapsed {std::chrono::duration_cast<std::chrono::seconds>(end-begin)};
 	std::cout << "\nImage Render Took: [ " << elapsed << " ]\n";
+
+#else
+	// RTIOW Book #1 Final Scene
+
+	// Image
+	[[maybe_unused]] constexpr int defaultFinalSceneWidth{ 1200 };
+	 //fileName = {"Final_Scene_1.ppm"};
+	 fileName = "Test.ppm";
+	// World
+	HittableList world;
+	world = world.RandomScene();
+
+	// Camera
+	Point3 lookFrom {13.0f, 2.0f, 3.0f};
+	Point3 lookAt {0.0f, 0.0f, 0.0f};
+	Vec3 vertUp {0.0f, 2.0f, 0.0f};
+	auto depthOfField {100.0f};
+	auto aperture {0.05f};
+	auto fov {35.0f};
+
+	Camera cam{lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField};
+
+	// Render
+	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
+	image.SetDimensions(uhdWidth);
+	image.SetRaySampleCount(10'000);
+	image.SetDiffuseRayCount(5000);
+
+	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
+		<< "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] " << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";
+	auto begin{ std::chrono::steady_clock::now() };
+	image.TraceImage(cam, world);
+	auto end{ std::chrono::steady_clock::now() };
+	auto elapsed{ std::chrono::duration_cast<std::chrono::seconds>(end - begin) };
+	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
+	image.PrintImageToFile();
+#endif
 
 }

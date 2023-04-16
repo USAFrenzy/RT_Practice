@@ -4,7 +4,7 @@
 
 namespace rmrt {
 
-	class DielectricMaterial : public Material {
+	class DielectricMaterial final  : public Material {
 		
 	public:
 		DielectricMaterial(float refractionIndex);
