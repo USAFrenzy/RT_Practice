@@ -91,9 +91,9 @@ int main()
 
 	// Image
 	[[maybe_unused]] constexpr int defaultFinalSceneWidth{ 1200 };
-	 //fileName = {"Final_Scene_1.ppm"};
-	 fileName = "Test.ppm";
-	// World
+	//  fileName = "Final_Scene_1.ppm";
+	  fileName = "test.ppm";
+	 // World
 	HittableList world;
 	world = world.RandomScene();
 
@@ -105,13 +105,13 @@ int main()
 	auto aperture {0.05f};
 	auto fov {35.0f};
 
-	Camera cam{lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField};
+	Camera cam{lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, 0.0f, 1.0f};
 
 	// Render
 	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
-	image.SetDimensions(uhdWidth);
-	image.SetRaySampleCount(10'000);
-	image.SetDiffuseRayCount(5000);
+	image.SetDimensions(sdWidth);
+	image.SetRaySampleCount(500);
+	image.SetDiffuseRayCount(50);
 
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
 		<< "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] " << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";

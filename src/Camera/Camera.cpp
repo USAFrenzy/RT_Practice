@@ -1,7 +1,7 @@
 #include <RMRT/Camera/Camera.h>
 
 
-rmrt::Camera::Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& vertUp, float vertFOV, float aspectRatio, float aperture, float focusDistance) {
+rmrt::Camera::Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& vertUp, float vertFOV, float aspectRatio, float aperture, float focusDistance, float time0, float time1) {
 
 	auto theta {DegToRad(vertFOV)};
 	auto h {tan(theta/2)};
@@ -20,6 +20,8 @@ rmrt::Camera::Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& v
 	m_lowerLeftCorner = m_origin - m_horizontal/2 - m_vertical/2 - (m_focalDistance*m_w);
 
 	m_lensRadius = aperture/2;
+	m_time0  = time0;
+	m_time1 = time1;
 }
 
 rmrt::Camera::~Camera()
@@ -30,7 +32,7 @@ rmrt::Ray rmrt::Camera::GetRay(float u, float v) const
 {
 	Vec3 rd {m_lensRadius*RandomInUnitDisc()};
 	Vec3 offset {m_u*rd.X() + m_v*rd.Y()};
-	return Ray(m_origin+offset, m_lowerLeftCorner + (u * m_horizontal) + (v * m_vertical) - m_origin - offset);
+	return Ray(m_origin+offset, m_lowerLeftCorner + (u * m_horizontal) + (v * m_vertical) - m_origin - offset, RandomDouble(m_time0, m_time1));
 }
 
 void rmrt::Camera::SetDepthOfField(float focalDistance)

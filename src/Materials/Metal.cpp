@@ -10,7 +10,7 @@ namespace rmrt {
 	bool MetalMaterial::Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const
 	{
 		Vec3 reflected{ Reflect(UnitVector(ray.Direction()), record.normal) };
-		scattered = Ray(record.p, reflected + (m_fuzz*RandomInUnitSphere()));
+		scattered = Ray(record.p, reflected + (m_fuzz*RandomInUnitSphere()), ray.Time());
 		attenuation = m_albedo;
 		return (Dot(scattered.Direction(), record.normal) > 0);
 	}

@@ -84,38 +84,48 @@ namespace rmrt {
 			Point3 target{ record.p + record.normal + RandomUnitVector() };
 			return 0.5f * RayColor(Ray(record.p, target - record.p), worldObject, --depth);
 		}
-		const auto& rayDirection {ray.Direction()};
-		Vec3 unitDirection{ (rayDirection/rayDirection.Length()) };
+		const auto& rayDirection{ ray.Direction() };
+		Vec3 unitDirection{ (rayDirection / rayDirection.Length()) };
 		auto	t = 0.5f * (unitDirection.Y() + 1.0f);
-		return Lerp(t, colorMap[TempColor::white], colorMap[TempColor::blue] );
+		return Lerp(t, colorMap[TempColor::white], colorMap[TempColor::blue]);
 	}
 
 	HittableList rmrt::HittableList::RandomScene()
 	{
-		Point3 staticPoint { 4.0f, 0.2f, 0.0f }; // moving this out of the loop
+		Point3 staticPoint{ 4.0f, 0.2f, 0.0f }; // moving this out of the loop
 		HittableList world;
-		
-		auto groundMaterial {std::make_shared<LambertianMaterial>(colorMap[TempColor::grey])};
+
+		auto groundMaterial{ std::make_shared<LambertianMaterial>(colorMap[TempColor::grey]) };
 		world.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, groundMaterial));
-		
+
 		for (int a{ -11 }; a < 11; ++a) {
 			for (int b{ -11 }; b < 11; ++b) {
-				auto chooseMaterial {RandomDouble()};
-				Point3 center {a + (0.9f*RandomDouble()), 0.2f, b + (0.9f*RandomDouble())};
+				auto chooseMaterial{ RandomDouble() };
+				Point3 center{ a + (0.9f * RandomDouble()), 0.2f, b + (0.9f * RandomDouble()) };
 				if ((center - staticPoint).Length() > 0.9f) {
 					std::shared_ptr<Material> sphereMaterial;
 					if (chooseMaterial < 0.8f) {
 						// Diffuse
-						auto albedo {Color::Random()*Color::Random()};
+						auto albedo{ Color::Random() * Color::Random() };
 						sphereMaterial = std::make_shared<LambertianMaterial>(albedo);
-						world.Store(std::make_shared<Sphere>(center, 0.2f, sphereMaterial));	
-					} else if (chooseMaterial < 0.95f) {
+						if (chooseMaterial > 0.3f) {
+							// Stationary Sphere
+							world.Store(std::make_shared<Sphere>(center, 0.2f, sphereMaterial));
+						}
+						else {
+							// Moving Sphere
+							auto center2{ center + Vec3(0.0f, RandomDouble(0.0f, 0.5f), 0.0f) };
+							world.Store(std::make_shared<MovingSphere>(center, center2, 0.0f, 1.0f, 0.2f, sphereMaterial));
+						}
+					}
+					else if (chooseMaterial < 0.95f) {
 						// Metal
-						auto albedo {Color::Random(0.5f, 1.0f)};
-						auto fuzzFactor {RandomDouble(0.0f, 0.5f)};
+						auto albedo{ Color::Random(0.5f, 1.0f) };
+						auto fuzzFactor{ RandomDouble(0.0f, 0.5f) };
 						sphereMaterial = std::make_shared<MetalMaterial>(albedo, fuzzFactor);
 						world.Store(std::make_shared<Sphere>(center, 0.2f, sphereMaterial));
-					} else {
+					}
+					else {
 						// Glass
 						sphereMaterial = std::make_shared<DielectricMaterial>(1.52f);
 						world.Store(std::make_shared<Sphere>(center, 0.2f, sphereMaterial));

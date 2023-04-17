@@ -18,7 +18,7 @@ namespace rmrt {
 		Vec3 direction{ ((refractionRatio * sinTheta > 1.0f) || (Reflectance(cosTheta, refractionRatio) > RandomDouble())) 
 			? Reflect(directionUnit, record.normal) 
 			: Refract(directionUnit, record.normal, refractionRatio) };
-		scattered = Ray(record.p, direction);
+		scattered = Ray(record.p, direction, ray.Time());
 		return true;
 	}
 

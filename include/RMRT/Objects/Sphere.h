@@ -24,4 +24,23 @@ namespace rmrt {
 		float m_radiusSquared;
 		std::shared_ptr<Material> m_materialPtr;
 	};
+
+	class MovingSphere final : public HittableObject
+	{
+
+	public:
+		MovingSphere();
+		MovingSphere(Point3 center0, Point3 center1, float time0, float time1, float radius, std::shared_ptr<Material> material);
+
+		virtual bool Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const override;
+		Point3 Center(float time) const;
+
+	public:
+		Point3 m_center0, m_center1;
+		float m_time0,  m_time1;
+		float m_radius, m_radiusSquared;
+		std::shared_ptr<Material> m_materialPtr;
+		Point3 m_centerDelta;
+		float m_timeDelta;
+	};
 }

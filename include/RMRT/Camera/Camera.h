@@ -8,7 +8,7 @@ namespace rmrt {
 	class Camera
 	{
 	public:
-		Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& vertUp, float vertFOV, float aspectRatio, float aperture, float focusDistance);
+		Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& vertUp, float vertFOV, float aspectRatio, float aperture, float focusDistance, float time0, float time1);
 		~Camera();
 
 		Ray GetRay(float u, float v) const;
@@ -28,6 +28,8 @@ namespace rmrt {
 		float m_focalDistance;
 		float m_viewWidth;
 		float m_viewHeight;
+		float m_time0;
+		float m_time1;
 	};
 
 }

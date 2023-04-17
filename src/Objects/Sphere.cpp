@@ -63,4 +63,43 @@ namespace rmrt {
 
 		return true;
 	}
+
+	MovingSphere::MovingSphere()
+	{
+	}
+
+	MovingSphere::MovingSphere(Point3 center0, Point3 center1, float time0, float time1, float radius, std::shared_ptr<Material> material)
+		: m_center0(center0), m_center1(center1), m_time0(time0), m_time1(time1), m_radius(radius), m_radiusSquared(radius*radius), m_materialPtr(material), m_centerDelta(center1-center0), m_timeDelta(time1-time0)
+	{
+	}
+
+	bool MovingSphere::Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const
+	{
+		const auto& rayTime { ray.Time() };
+		Vec3 originCenter{ ray.Origin() - Center(rayTime)};
+		auto c{ originCenter.LengthSquared() - m_radiusSquared };
+		const auto& rayDirection{ ray.Direction() };
+		auto a{ rayDirection.LengthSquared() };
+		auto bHalf{ Dot(originCenter, rayDirection) };
+		auto discriminant{ (bHalf * bHalf) - (a * c) };
+		if (discriminant < 0) return false;
+		auto sqrtDiscriminant{ std::sqrt(discriminant) };
+		auto root{ (-bHalf - sqrtDiscriminant) / a };
+		if (root < tMin || tMax < root) {
+			root = (-bHalf + sqrtDiscriminant) / a;
+			if (root < tMin || tMax < root) return false;
+		}
+		record.t = root;
+		record.p = ray.At(record.t);
+		Vec3 outwardNormal{ (record.p - Center(rayTime)) / m_radius };
+		record.SetFaceNormal(ray, outwardNormal);
+		record.materialPtr = m_materialPtr;
+
+		return true;
+	}
+
+	Point3 MovingSphere::Center(float time) const
+	{
+		return m_center0 + ((time - m_time0)/m_timeDelta) * (m_centerDelta);
+	}
 }
