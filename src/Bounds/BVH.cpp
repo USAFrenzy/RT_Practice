@@ -23,11 +23,22 @@ namespace rmrt {
 			: (axis == 1) ? BoxYCompare
 			: BoxZCompare;
 
-		size_t objectSpan{ end - start };
-		if (objectSpan == 1) {
-			m_left = m_right = objects[start];
+		switch (size_t objectSpan{ end - start }; objectSpan) {
+		default:
+		{
+			std::sort(objects.begin() + start, objects.begin() + end, comparator);
+			auto mid{ start + objectSpan / 2 };
+			m_left = std::make_shared<BVH_Node>(objects, start, mid, time0, time1);
+			m_right = std::make_shared<BVH_Node>(objects, mid, end, time0, time1);
+			break;
 		}
-		else if (objectSpan == 2) {
+		case 1: {
+
+			m_left = m_right = objects[start];
+			break;
+		}
+		case 2:
+		{
 			if (comparator(objects[start], objects[start + 1])) {
 				m_left = objects[start];
 				m_right = objects[start + 1];
@@ -36,12 +47,8 @@ namespace rmrt {
 				m_left = objects[start + 1];
 				m_right = objects[start];
 			}
+			break;
 		}
-		else {
-			std::sort(objects.begin() + start, objects.begin() +end, comparator);
-			auto mid{ start + objectSpan / 2 };
-			m_left = std::make_shared<BVH_Node>(objects, start, mid, time0, time1);
-			m_right = std::make_shared<BVH_Node>(objects, mid, end, time0, time1);
 		}
 		AABB leftBox, rightBox;
 		if (!m_left->BoundingBox(time0, time1, leftBox) || !m_right->BoundingBox(time0, time1, rightBox)) {

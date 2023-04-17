@@ -97,7 +97,7 @@ int main()
 	  fileName = "test.ppm";
 	 // World
 	HittableList world;
-	world.Store(std::make_shared<BVH_Node>(std::move(world.RandomScene()), 0.0f, 1.0f));
+	world.Store(std::make_shared<BVH_Node>(std::move(world.RandomScene()), 0.0f, 0.0f));
 
 	// Camera
 	Point3 lookFrom {13.0f, 2.0f, 3.0f};

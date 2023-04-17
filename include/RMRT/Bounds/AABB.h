@@ -16,7 +16,8 @@ namespace rmrt {
 		inline constexpr bool Hit(const Ray& ray, float tMin, float tMax) const {
 			const auto& rayOrigin{ ray.Origin() };
 			const auto& rayDirection{ ray.Direction() };
-			for (int a{ 0 }; a < 3; ) {
+			auto a {0};
+			for (; ; ) {
 				auto invD{ 1.0f / rayDirection[a] };
 				auto t0{ (m_min[a] - rayOrigin[a]) * invD };
 				auto t1{ (m_max[a] - rayOrigin[a]) * invD };
@@ -24,9 +25,9 @@ namespace rmrt {
 				tMin = t0 > tMin ? t0 : tMin;
 				tMax = t1 < tMax ? t1 : tMax;
 				if (tMax <= tMin) return false;
-				++a;
+				if(++a < 3) continue;
+				return true;
 			}
-			return true;
 		}
 
 
