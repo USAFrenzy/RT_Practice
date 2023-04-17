@@ -7,6 +7,7 @@
 #include <RMRT/Materials/Metal.h>
 #include <RMRT/Materials/Dielectric.h>
 #include <RMRT/Image/Image.h>
+#include <RMRT/Bounds/BVH.h>
 
 #include <iostream>
 #include <chrono>
@@ -44,8 +45,8 @@ int main()
 	Image image(fileName, aspectRatio, defaultWidth); 
 	
 	image.SetDimensions(fsdWidth);
-	image.SetRaySampleCount(1'000);
-	image.SetDiffuseRayCount(1550);
+	image.SetRaySampleCount(100);
+	image.SetDiffuseRayCount(50);
 
 	// World
 	HittableList world{};
@@ -75,7 +76,7 @@ int main()
 	auto dof {1.0f};
 	auto aperture {0.0f}; //  '0.0f'  effectively disables depth of field effect
 
-	Camera camera{lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, dof};
+	Camera camera{lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, dof, 0.0f, 0.0f};
 
 	// Render
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName <<"'\n" 
@@ -85,6 +86,7 @@ int main()
 	auto end { std::chrono::steady_clock::now() };
 	auto elapsed {std::chrono::duration_cast<std::chrono::seconds>(end-begin)};
 	std::cout << "\nImage Render Took: [ " << elapsed << " ]\n";
+	image.PrintImageToFile();
 
 #else
 	// RTIOW Book #1 Final Scene
@@ -95,7 +97,7 @@ int main()
 	  fileName = "test.ppm";
 	 // World
 	HittableList world;
-	world = world.RandomScene();
+	world.Store(std::make_shared<BVH_Node>(std::move(world.RandomScene()), 0.0f, 1.0f));
 
 	// Camera
 	Point3 lookFrom {13.0f, 2.0f, 3.0f};
@@ -109,9 +111,9 @@ int main()
 
 	// Render
 	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
-	image.SetDimensions(sdWidth);
-	image.SetRaySampleCount(500);
-	image.SetDiffuseRayCount(50);
+	image.SetDimensions(fhdWidth);
+	image.SetRaySampleCount(1000);
+	image.SetDiffuseRayCount(250);
 
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
 		<< "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] " << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";

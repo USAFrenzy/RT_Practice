@@ -98,8 +98,13 @@ namespace rmrt {
 		return true;
 	}
 
-	Point3 MovingSphere::Center(float time) const
+	bool MovingSphere::BoundingBox(float time0, float time1, AABB& outputBox) const
 	{
-		return m_center0 + ((time - m_time0)/m_timeDelta) * (m_centerDelta);
+		AABB box0{ Center(m_time0) - Vec3(m_radius, m_radius, m_radius), Center(m_time0) + Vec3(m_radius, m_radius, m_radius) };
+		AABB box1{ Center(m_time1) - Vec3(m_radius, m_radius, m_radius), Center(m_time1) + Vec3(m_radius, m_radius, m_radius) };
+		outputBox = SurroundingBox(box0, box1);
+		return true;
 	}
+
+
 }

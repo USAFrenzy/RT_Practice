@@ -22,4 +22,9 @@ namespace rmrt {
 		return min + (max - min) * RandomDouble();
 	}
 
+	int RandomInt(int min, int max)
+	{
+		return static_cast<int>(RandomDouble(static_cast<float>(min), static_cast<float>(max+1)));
+	}
+
 }

@@ -17,6 +17,8 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Metal.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Lambertian.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Dielectric.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Bounds/AABB.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Bounds/BVH.h"
 )
 
 set(RMRT_SOURCES 
@@ -29,6 +31,8 @@ set(RMRT_SOURCES
     "Materials/Lambertian.cpp"
     "Materials/Dielectric.cpp"
     "Image/Image.cpp"
+    "Bounds/AABB.cpp"
+    "Bounds/BVH.cpp"
     "RMRT.cpp"
 )
 

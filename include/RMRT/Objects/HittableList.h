@@ -8,7 +8,7 @@
 
 namespace rmrt {
 
-	class HittableList :public HittableObject
+	class HittableList : public HittableObject
 	{
 	public:
 		using HittableObjectList = std::vector<std::shared_ptr<HittableObject>>;
@@ -19,7 +19,9 @@ namespace rmrt {
 
 		void Clear();
 		void Store(std::shared_ptr<HittableObject> object);
-		virtual bool Hit(const Ray& ray, float tmin, float tMax, HitRecord& record) const;
+		virtual bool Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const override;
+		virtual bool BoundingBox(float time0, float time1, AABB& outputBox) const override;
+		inline const HittableObjectList& Objects() const { return m_objects; }
 		HittableList RandomScene();
 
 	private:

@@ -45,6 +45,18 @@ namespace rmrt {
 		return isHit;
 	}
 
+	bool HittableList::BoundingBox(float time0, float time1, AABB& outputBox) const
+	{
+			AABB temp;
+			bool firstBox{ true };
+			for (const auto& object : m_objects) {
+				if (!object->BoundingBox(time0, time1, temp)) return false;
+				outputBox = firstBox ? temp : SurroundingBox(outputBox, temp);
+				firstBox = false;
+			}
+			return true;
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// This function is used to blend the colors in the background, the author states it's a gradient of blue to white.
 	// This is using linear interpolation with the equation: 

@@ -2,6 +2,7 @@
 
 #include <RMRT/RMRT.h>
 #include <RMRT/Materials/Material.h>
+#include <RMRT/Bounds/AABB.h>
 
 #include <memory>
 
@@ -31,5 +32,6 @@ namespace rmrt {
 	{
 	public:
 		virtual bool Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const = 0;
+		virtual bool BoundingBox(float time0, float time1, AABB& outputBox) const = 0;
 	};
 }
