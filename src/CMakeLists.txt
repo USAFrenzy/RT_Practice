@@ -19,9 +19,11 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Materials/Dielectric.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Bounds/AABB.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Bounds/BVH.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Textures/Texture.h"
 )
 
 set(RMRT_SOURCES 
+    "RMRT.cpp"
     "Vec3.cpp"
     "Ray.cpp"
     "Objects/Sphere.cpp"
@@ -33,7 +35,7 @@ set(RMRT_SOURCES
     "Image/Image.cpp"
     "Bounds/AABB.cpp"
     "Bounds/BVH.cpp"
-    "RMRT.cpp"
+    "Textures/Texture.cpp"
 )
 
 source_group(

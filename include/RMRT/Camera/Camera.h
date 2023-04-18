@@ -7,15 +7,16 @@ namespace rmrt {
 
 	class Camera
 	{
-	public:
-		Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& vertUp, float vertFOV, float aspectRatio, float aperture, float focusDistance, float time0, float time1);
+	  public:
+		Camera(const Point3& lookFrom, const Point3& lookAt, const Vec3& vertUp, float vertFOV, float aspectRatio, float aperture, float focusDistance, float time0,
+		       float time1);
 		~Camera();
 
 		Ray GetRay(float u, float v) const;
 		void SetFocalLength(const Point3& origin, const Point3& targett);
 		void SetDepthOfField(float focalDistance);
 
-	private:
+	  private:
 		Point3 m_origin;
 		Point3 m_lowerLeftCorner;
 		Vec3 m_horizontal;
@@ -32,4 +33,4 @@ namespace rmrt {
 		float m_time1;
 	};
 
-}
+}    // namespace rmrt

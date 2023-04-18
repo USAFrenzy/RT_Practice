@@ -4,13 +4,13 @@
 #include <RMRT/Objects/HittableList.h>
 
 // Multi-threading support
-#include<algorithm>
-#include<execution>
-#include <vector>
+#include <algorithm>
 #include <array>
+#include <execution>
+#include <vector>
 
-#include <string>
 #include <fstream>
+#include <string>
 
 namespace rmrt {
 
@@ -20,17 +20,17 @@ namespace rmrt {
 
 	class Image
 	{
-
-		struct ProgressTracker {
-			double m_hours {0};
-			double m_minutes {0};
-			double m_seconds{0};
-			void EstimateTimeLeft(int currentScanLine,int totalScanLines,const  std::chrono::steady_clock::time_point& startTime);
+		struct ProgressTracker
+		{
+			double m_hours { 0 };
+			double m_minutes { 0 };
+			double m_seconds { 0 };
+			void EstimateTimeLeft(int currentScanLine, int totalScanLines, const std::chrono::steady_clock::time_point& startTime);
 			std::string TimeLeftStr(int currentScanLine, int totalScanLines, const std::chrono::steady_clock::time_point& startTime);
 			void PrintProgress(int totalScanLines, int totalWidth, int pixelX, int pixelY, const std::chrono::steady_clock::time_point& startTime);
 		};
 
-	public:
+	  public:
 		Image(std::string_view fileName, float aspectRatio, int width);
 		~Image();
 
@@ -48,10 +48,10 @@ namespace rmrt {
 		void TraceImage(const Camera& camera, const HittableList& world);
 		void PrintImageToFile();
 
-	private:
+	  private:
 		void ResizeImageMatrix();
 
-	private:
+	  private:
 		std::string m_name;
 		float m_aspectRatio;
 		int m_width;
@@ -60,10 +60,10 @@ namespace rmrt {
 		int m_samplesPerPixel;
 		std::vector<int> m_samplesIter;
 		std::ofstream m_file;
-		std::array<char, img_helper::BUFF_SIZE> m_buffer{};
+		std::array<char, img_helper::BUFF_SIZE> m_buffer {};
 		float m_scale;
 		ProgressTracker m_tracker;
 		std::vector<std::vector<std::string>> m_imgMatrix;
 	};
 
-}
+}    // namespace rmrt

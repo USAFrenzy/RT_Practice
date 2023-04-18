@@ -9,22 +9,21 @@ namespace rmrt {
 	}
 
 	float RandomDouble() {
-		//static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
-		//static std::mt19937 generator;
-		//return distribution(generator);
+		// static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+		// static std::mt19937 generator;
+		// return distribution(generator);
 		return static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) + 1.0f);
 	}
 
 	float RandomDouble(float min, float max) {
-		//static std::uniform_real_distribution<float> distribution(min, max);
-		//static std::mt19937 generator;
-		//return distribution(generator);
+		// static std::uniform_real_distribution<float> distribution(min, max);
+		// static std::mt19937 generator;
+		// return distribution(generator);
 		return min + (max - min) * RandomDouble();
 	}
 
-	int RandomInt(int min, int max)
-	{
-		return static_cast<int>(RandomDouble(static_cast<float>(min), static_cast<float>(max+1)));
+	int RandomInt(int min, int max) {
+		return static_cast<int>(RandomDouble(static_cast<float>(min), static_cast<float>(max + 1)));
 	}
 
-}
+}    // namespace rmrt
