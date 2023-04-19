@@ -4,6 +4,7 @@
 #include <RMRT/Materials/Metal.h>
 #include <RMRT/Objects/HittableList.h>
 #include <RMRT/Objects/Sphere.h>
+#include <RMRT/Textures/CheckerTexture.h>
 
 namespace rmrt {
 	HittableList::HittableList() { }
@@ -95,8 +96,8 @@ namespace rmrt {
 		Point3 staticPoint { 4.0f, 0.2f, 0.0f };    // moving this out of the loop
 		HittableList world;
 
-		auto groundMaterial { std::make_shared<LambertianMaterial>(colorMap[ TempColor::grey ]) };
-		world.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, groundMaterial));
+		auto groundMaterial { std::make_shared<CheckerTexture>(colorMap[ TempColor::greenish ], colorMap[ TempColor::black ]) };
+		world.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, std::make_shared<LambertianMaterial>(groundMaterial)));
 
 		for( int a { -11 }; a < 11; ++a ) {
 				for( int b { -11 }; b < 11; ++b ) {
@@ -104,11 +105,11 @@ namespace rmrt {
 						Point3 center { a + (0.9f * RandomDouble()), 0.2f, b + (0.9f * RandomDouble()) };
 						if( (center - staticPoint).Length() > 0.9f ) {
 								std::shared_ptr<Material> sphereMaterial;
-								if( chooseMaterial < 0.8f ) {
+								if( chooseMaterial < 0.55f ) {
 										// Diffuse
 										auto albedo { Color::Random() * Color::Random() };
 										sphereMaterial = std::make_shared<LambertianMaterial>(albedo);
-										if( chooseMaterial > 0.3f ) {
+										if( chooseMaterial > 0.2f ) {
 												// Stationary Sphere
 												world.Store(std::make_shared<Sphere>(center, 0.2f, sphereMaterial));
 										} else {
@@ -116,7 +117,7 @@ namespace rmrt {
 												auto center2 { center + Vec3(0.0f, RandomDouble(0.0f, 0.5f), 0.0f) };
 												world.Store(std::make_shared<MovingSphere>(center, center2, 0.0f, 1.0f, 0.2f, sphereMaterial));
 											}
-								} else if( chooseMaterial < 0.95f ) {
+								} else if( chooseMaterial < 0.85f ) {
 										// Metal
 										auto albedo { Color::Random(0.5f, 1.0f) };
 										auto fuzzFactor { RandomDouble(0.0f, 0.5f) };

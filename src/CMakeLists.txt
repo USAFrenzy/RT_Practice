@@ -20,6 +20,7 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Bounds/AABB.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Bounds/BVH.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Textures/Texture.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Textures/CheckerTexture.h"
 )
 
 set(RMRT_SOURCES 
@@ -36,6 +37,7 @@ set(RMRT_SOURCES
     "Bounds/AABB.cpp"
     "Bounds/BVH.cpp"
     "Textures/Texture.cpp"
+    "Textures/CheckerTexture.cpp"
 )
 
 source_group(

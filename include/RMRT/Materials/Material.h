@@ -1,6 +1,7 @@
 #pragma once
 
 #include <RMRT/Objects/HittableObject.h>
+#include <RMRT/Textures/Texture.h>
 #include <RMRT/RMRT.h>
 
 namespace rmrt {

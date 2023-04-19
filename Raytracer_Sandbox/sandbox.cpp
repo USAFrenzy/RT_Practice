@@ -12,7 +12,6 @@
 #include <chrono>
 #include <iostream>
 
-// NOTE TO SELF: In cmake generation, set "/arch:AVX2" since I'm running this on a 10900k desktop and a 10750H laptop CPU
 
 #define TOGGLE_TRUE_SANDBOX 0
 
@@ -101,11 +100,11 @@ int main() {
 	auto depthOfField { 100.0f };
 	auto aperture { 0.05f };
 	auto fov { 35.0f };
-	auto time1 { 0.0f }, time2 { 1.0f};
+	auto time1 { 0.0f }, time2 { 1.0f };
 
 	// Need to update Camera class given that going forward, the BVH_Node structure will be the one in charge of dishing
 	// out the time delta for the scene instead of the camera class handling it explicitly
-	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, time1, time2};
+	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, time1, time2 };
 
 	// Render
 	Image image(fileName, aspectRatio, defaultFinalSceneWidth);

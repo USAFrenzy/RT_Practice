@@ -8,10 +8,11 @@ namespace rmrt {
 	{
 	  public:
 		LambertianMaterial(const Color& albedo);
+		LambertianMaterial(std::shared_ptr<Texture> albedo);
 		virtual bool Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const override;
 
 	  public:
-		Color m_albedo;
+		  std::shared_ptr<Texture> m_albedo;
 	};
 
 }    // namespace rmrt

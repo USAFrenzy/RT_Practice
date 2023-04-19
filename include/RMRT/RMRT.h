@@ -44,7 +44,7 @@ namespace rmrt {
 
 	static std::unordered_map<TempColor, rmrt::Color> colorMap = {
 		{ TempColor::white, rmrt::Color(1.0f, 1.0f, 1.0f) },  { TempColor::blue, rmrt::Color(0.5f, 0.7f, 1.0f) },
-		{ TempColor::pink, rmrt::Color(0.7f, 0.3f, 0.3f) },   { TempColor::greenish, rmrt::Color(0.5f, 0.63f, 0.1f) },
+		{ TempColor::pink, rmrt::Color(0.7f, 0.3f, 0.3f) },   { TempColor::greenish, rmrt::Color(0.2f, 0.3f, 0.1f) },
 		{ TempColor::bluish, rmrt::Color(0.1f, 0.1f, 0.9f) }, { TempColor::goldish, rmrt::Color(0.9f, 0.7f, 0.3f) },
 		{ TempColor::black, rmrt::Color(0.0f, 0.0f, 0.0f) },  { TempColor::grey, rmrt::Color(0.5f, 0.5f, 0.5f) },
 	};

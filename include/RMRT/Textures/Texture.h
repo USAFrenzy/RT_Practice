@@ -7,7 +7,7 @@ namespace rmrt {
 	class Texture
 	{
 	  public:
-		constexpr virtual Color Value(float u, float v, const Point3& p) const = 0;
+		  virtual Color Value(float u, float v, const Point3& p) const  = 0;
 	};
 
 	class SolidColor: public Texture
@@ -16,7 +16,7 @@ namespace rmrt {
 		constexpr SolidColor() { }
 		constexpr SolidColor(Color color): m_colorValue(color) { }
 		constexpr SolidColor(float red, float green, float blue): m_colorValue(Color(red, green, blue)) { }
-		constexpr virtual Color Value(float u, float v, const Point3& p) const override {
+		inline constexpr virtual Color Value(float u, float v, const Point3& p) const override {
 			return m_colorValue;
 		}
 
