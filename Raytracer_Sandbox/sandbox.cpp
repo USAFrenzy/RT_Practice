@@ -89,6 +89,7 @@ int main() {
 	[[maybe_unused]] constexpr int defaultFinalSceneWidth { 1200 };
 	//  fileName = "Final_Scene_1.ppm";
 	fileName = "test.ppm";
+
 	// World
 	HittableList world {};
 	world.Store(std::make_shared<BVH_Node>(std::move(world.RandomScene()), 0.0f, 0.0f));
@@ -100,8 +101,11 @@ int main() {
 	auto depthOfField { 100.0f };
 	auto aperture { 0.05f };
 	auto fov { 35.0f };
+	auto time1 { 0.0f }, time2 { 1.0f};
 
-	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, 0.0f, 1.0f };
+	// Need to update Camera class given that going forward, the BVH_Node structure will be the one in charge of dishing
+	// out the time delta for the scene instead of the camera class handling it explicitly
+	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, time1, time2};
 
 	// Render
 	Image image(fileName, aspectRatio, defaultFinalSceneWidth);

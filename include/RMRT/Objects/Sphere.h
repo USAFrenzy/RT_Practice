@@ -17,6 +17,7 @@ namespace rmrt {
 		const Point3& GetCenter() const;
 		void SetRadius(const float& radius);
 		const float& GetRadius() const;
+		static void SphereUV(const Point3&point, float& u, float&v);
 		bool Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const override;
 		inline constexpr bool BoundingBox(float time0, float time1, AABB& outputBox) const override {
 			outputBox = AABB(m_center - Vec3(m_radius, m_radius, m_radius), m_center + Vec3(m_radius, m_radius, m_radius));
