@@ -7,7 +7,7 @@ namespace rmrt {
 	class Texture
 	{
 	  public:
-		  virtual Color Value(float u, float v, const Point3& p) const  = 0;
+		virtual Color Value(float u, float v, const Point3& p) const = 0;
 	};
 
 	class SolidColor: public Texture

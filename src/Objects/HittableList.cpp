@@ -5,6 +5,7 @@
 #include <RMRT/Objects/HittableList.h>
 #include <RMRT/Objects/Sphere.h>
 #include <RMRT/Textures/CheckerTexture.h>
+#include <RMRT/Textures/NoiseTexture.h>
 
 namespace rmrt {
 	HittableList::HittableList() { }
@@ -140,6 +141,14 @@ namespace rmrt {
 		world.Store(std::make_shared<Sphere>(Point3(4.0f, 1.0f, 0.0f), 1.0f, material3));
 
 		return world;
+	}
+
+	HittableList HittableList::TwoPerlinSpheres() {
+		HittableList objects;
+		auto perlinTexture { std::make_shared<NoiseTexture>(4.0f) };
+		objects.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, std::make_shared<LambertianMaterial>(perlinTexture)));
+		objects.Store(std::make_shared<Sphere>(Point3(0.0f, 2.0f, 0.0f), 2.0f, std::make_shared<LambertianMaterial>(perlinTexture)));
+		return objects;
 	}
 
 }    // namespace rmrt

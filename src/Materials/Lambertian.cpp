@@ -5,7 +5,7 @@ namespace rmrt {
 
 	LambertianMaterial::LambertianMaterial(const Color& albedo): m_albedo(std::make_shared<SolidColor>(albedo)) { }
 
-	LambertianMaterial::LambertianMaterial(std::shared_ptr<Texture> albedo ) : m_albedo(albedo) {}
+	LambertianMaterial::LambertianMaterial(std::shared_ptr<Texture> albedo): m_albedo(albedo) { }
 
 	bool LambertianMaterial::Scatter(const rmrt::Ray& ray, const rmrt::HitRecord& record, rmrt::Color& attenuation, rmrt::Ray& scattered) const {
 		auto scatterDirection { record.p + record.normal + RandomUnitVector() };

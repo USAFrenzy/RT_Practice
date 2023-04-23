@@ -29,8 +29,7 @@ namespace rmrt {
 					tMin = t0 > tMin ? t0 : tMin;
 					tMax = t1 < tMax ? t1 : tMax;
 					if( tMax <= tMin ) return false;
-					if( ++a < 3 ) continue;
-					return true;
+					if( ++a >= 3 ) return true;
 				}
 		}
 

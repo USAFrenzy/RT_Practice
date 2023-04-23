@@ -8,12 +8,14 @@
 #include <RMRT/Objects/HittableList.h>
 #include <RMRT/Objects/Sphere.h>
 #include <RMRT/RMRT.h>
+#include <RMRT/Textures/CheckerTexture.h>
 
 #include <chrono>
 #include <iostream>
 
-
 #define TOGGLE_TRUE_SANDBOX 0
+#define TOGGLE_SCENE_ONE    0
+#define TOGGLE_SCENE_TWO    1
 
 int main() {
 	using namespace rmrt;
@@ -28,7 +30,6 @@ int main() {
 	[[maybe_unused]] constexpr int uhdWidth { 3840 };                // 4k
 
 #if TOGGLE_TRUE_SANDBOX
-
 	// Image
 	[[maybe_unused]] constexpr int defaultWidth { 400 };
 
@@ -44,7 +45,7 @@ int main() {
 	// World
 	HittableList world {}, worldList {};
 
-	auto materialGround { std::make_shared<LambertianMaterial>(colorMap[ TempColor::greenish ]) };
+	auto materialGround { std::make_shared<CheckerTexture>(colorMap[ TempColor::greenish ], colorMap[ TempColor::black ]) };
 	auto materialCenter { std::make_shared<LambertianMaterial>(colorMap[ TempColor::pink ]) };
 	auto materialLeft { std::make_shared<MetalMaterial>(colorMap[ TempColor::bluish ], 0.8f) };
 	auto materialRight { std::make_shared<MetalMaterial>(colorMap[ TempColor::goldish ], 0.25f) };
@@ -82,16 +83,20 @@ int main() {
 	std::cout << "\nImage Render Took: [ " << elapsed << " ]\n";
 	image.PrintImageToFile();
 
-#else
+#elif TOGGLE_SCENE_ONE
 
 	// Image
 	[[maybe_unused]] constexpr int defaultFinalSceneWidth { 1200 };
-	//  fileName = "Final_Scene_1.ppm";
-	fileName = "test.ppm";
+	fileName = "Final_Scene_1.ppm";
+	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
+	image.SetRaySampleCount(500);
+	image.SetDiffuseRayCount(50);
 
 	// World
 	HittableList world {};
-	world.Store(std::make_shared<BVH_Node>(std::move(world.RandomScene()), 0.0f, 0.0f));
+	// Keeping the assignment line just due to the weird issue right now of sky rendering with BVH_Node
+	world = world.RandomScene();
+	// world.Store(std::make_shared<BVH_Node>(std::move(world.RandomScene()), 0.0f, 0.0f));
 
 	// Camera
 	Point3 lookFrom { 13.0f, 2.0f, 3.0f };
@@ -101,17 +106,9 @@ int main() {
 	auto aperture { 0.05f };
 	auto fov { 35.0f };
 	auto time1 { 0.0f }, time2 { 1.0f };
-
-	// Need to update Camera class given that going forward, the BVH_Node structure will be the one in charge of dishing
-	// out the time delta for the scene instead of the camera class handling it explicitly
 	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, time1, time2 };
 
 	// Render
-	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
-	image.SetDimensions(sdWidth);
-	image.SetRaySampleCount(500);
-	image.SetDiffuseRayCount(50);
-
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
 			  << "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] "
 			  << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";
@@ -121,5 +118,44 @@ int main() {
 	auto elapsed { std::chrono::duration_cast<std::chrono::seconds>(end - begin) };
 	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
 	image.PrintImageToFile();
+
+#elif TOGGLE_SCENE_TWO
+
+	// Image
+	[[maybe_unused]] constexpr int defaultFinalSceneWidth { 1200 };
+	//  fileName = "Final_Scene_2.ppm";
+	fileName = "Testing_Scene_2.ppm";
+	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
+	image.SetDimensions(sdWidth);
+	image.SetRaySampleCount(100);
+	image.SetDiffuseRayCount(50);
+
+	// World
+	HittableList world {};
+	// Keeping the assignment line just due to the weird issue right now of sky rendering with BVH_Node
+	// world = world.TwoPerlinSpheres();
+	world.Store(std::make_shared<BVH_Node>(world.TwoPerlinSpheres(), 0.0f, 0.0f));
+
+	// Camera
+	Point3 lookFrom { 13.0f, 2.0f, 3.0f };
+	Point3 lookAt { 0.0f, 0.0f, 0.0f };
+	Vec3 vertUp { 0.0f, 2.0f, 0.0f };
+	auto depthOfField { 100.0f };
+	auto aperture { 0.05f };
+	auto fov { 35.0f };
+	auto time1 { 0.0f }, time2 { 1.0f };
+	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, time1, time2 };
+
+	// Render
+	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
+			  << "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] "
+			  << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";
+	auto begin { std::chrono::steady_clock::now() };
+	image.TraceImage(cam, world);
+	auto end { std::chrono::steady_clock::now() };
+	auto elapsed { std::chrono::duration_cast<std::chrono::seconds>(end - begin) };
+	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
+	image.PrintImageToFile();
+
 #endif
 }

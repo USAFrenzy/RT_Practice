@@ -21,6 +21,8 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Bounds/BVH.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Textures/Texture.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Textures/CheckerTexture.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Textures/NoiseTexture.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Noise/Perlin.h"
 )
 
 set(RMRT_SOURCES 
@@ -38,6 +40,7 @@ set(RMRT_SOURCES
     "Bounds/BVH.cpp"
     "Textures/Texture.cpp"
     "Textures/CheckerTexture.cpp"
+    "Noise/Perlin.cpp"
 )
 
 source_group(
