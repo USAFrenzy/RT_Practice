@@ -47,13 +47,13 @@ namespace rmrt {
 			e[ 2 ] += v.e[ 2 ];
 			return *this;
 		}
-		[[nodiscard]] inline constexpr Vec3& operator*=(const float t) noexcept {
+		inline constexpr Vec3& operator*=(const float t) noexcept {
 			e[ 0 ] *= t;
 			e[ 1 ] *= t;
 			e[ 2 ] *= t;
 			return *this;
 		}
-		[[nodiscard]] inline constexpr Vec3& operator/=(const float t) noexcept {
+		inline constexpr Vec3& operator/=(const float t) noexcept {
 			return *this *= 1 / t;
 		}
 

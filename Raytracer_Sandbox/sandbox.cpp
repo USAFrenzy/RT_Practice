@@ -10,6 +10,8 @@
 #include <RMRT/RMRT.h>
 #include <RMRT/Textures/CheckerTexture.h>
 
+#include <RMRT/Textures/MarbleTexture.h>
+#include <RMRT/Textures/NoiseTexture.h>
 #include <chrono>
 #include <iostream>
 
@@ -37,22 +39,21 @@ int main() {
 	// Creating the render context; this portion and this class isn't a part of the tutorial
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Image image(fileName, aspectRatio, defaultWidth);
-
-	image.SetDimensions(fsdWidth);
-	image.SetRaySampleCount(500);
-	image.SetDiffuseRayCount(50);
+	image.SetDimensions(uhdWidth);
+	image.SetRaySampleCount(1000);
+	image.SetDiffuseRayCount(500);
 
 	// World
-	HittableList world {}, worldList {};
+	HittableList world {};
 
 	auto materialGround { std::make_shared<CheckerTexture>(colorMap[ TempColor::greenish ], colorMap[ TempColor::black ]) };
-	auto materialCenter { std::make_shared<LambertianMaterial>(colorMap[ TempColor::pink ]) };
+	auto materialCenter { std::make_shared<MarbleTexture>(5.0f) };
 	auto materialLeft { std::make_shared<MetalMaterial>(colorMap[ TempColor::bluish ], 0.8f) };
-	auto materialRight { std::make_shared<MetalMaterial>(colorMap[ TempColor::goldish ], 0.25f) };
+	auto materialRight { std::make_shared<MetalMaterial>(colorMap[ TempColor::goldish ], 0.15f) };
 	auto materialGlass { std::make_shared<DielectricMaterial>(1.52f) };
 
-	world.Store(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f, materialGround));
-	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, materialCenter));
+	world.Store(std::make_shared<Sphere>(Point3(0.0f, -100.5f, -1.0f), 100.0f, std::make_shared<LambertianMaterial>(materialGround)));
+	world.Store(std::make_shared<Sphere>(Point3(0.0f, 0.0f, -1.0f), 0.5f, std::make_shared<LambertianMaterial>(materialCenter)));
 	world.Store(std::make_shared<Sphere>(Point3(-1.1f, 0.0f, -1.0f), 0.5f, materialLeft));
 	world.Store(std::make_shared<Sphere>(Point3(1.1f, 0.0f, -1.0f), 0.5f, materialRight));
 	world.Store(std::make_shared<Sphere>(Point3(-0.48f, -0.36f, -0.78f), 0.145f, materialGlass));
@@ -60,24 +61,26 @@ int main() {
 	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.36f, -0.78f), 0.145f, materialGlass));
 	world.Store(std::make_shared<Sphere>(Point3(0.48f, -0.05f, -0.65f), 0.1f, materialGlass));
 
-	worldList.Store(std::make_shared<BVH_Node>(world, 0.0f, 0.0f));
+	// HittableList worldList {};
+	// worldList.Store(std::make_shared<BVH_Node>(world, 0.0f, 0.0f));
 
 	// Camera
-	auto lookFrom { Point3(0, 0, 1) };
-	auto lookAt { Point3(0, 0, -1) };
-	auto vertUp { Vec3(0, 1, 0) };
+	auto lookFrom { Point3(0.0f, 0.0f, 1.0f) };
+	auto lookAt { Point3(0.0f, 0.0f, -1.0f) };
+	auto vertUp { Vec3(0.0f, 1.0f, 0.0f) };
 	auto fov { 55.0f };
-	auto dof { 1.0f };
+	auto dof { 150.0f };
 	auto aperture { 0.0f };    //  '0.0f'  effectively disables depth of field effect
+	auto time1 { 0.0f }, time2 { 0.0f };
 
-	Camera camera { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, dof, 0.0f, 0.0f };
+	Camera camera { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, dof, time1, time2 };
 
 	// Render
 	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
 			  << "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] "
 			  << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";
 	auto begin { std::chrono::steady_clock::now() };
-	image.TraceImage(camera, worldList);
+	image.TraceImage(camera, world);
 	auto end { std::chrono::steady_clock::now() };
 	auto elapsed { std::chrono::duration_cast<std::chrono::seconds>(end - begin) };
 	std::cout << "\nImage Render Took: [ " << elapsed << " ]\n";

@@ -9,16 +9,31 @@ namespace rmrt {
 	class NoiseTexture: public Texture
 	{
 	  public:
-		NoiseTexture() { }
+		NoiseTexture(): m_scale(4.0f) { }
 		NoiseTexture(float scale): m_scale(scale) { }
 
 		inline virtual Color Value(float u, float v, const Point3& p) const override {
-			return colorMap[ TempColor::white ] * m_noise.Noise(m_scale * p);
+			return colorMap[ TempColor::white ] * 0.5f * (1.0f + m_noise.Noise(m_scale * p));
 		}
 
 	  private:
-		PerlinNoise m_noise;
 		float m_scale;
+		PerlinNoise m_noise;
+	};
+
+	class TurbulentTexture: public Texture
+	{
+	  public:
+		TurbulentTexture(): m_scale(4.0f) { }
+		TurbulentTexture(float scale): m_scale(scale) { }
+
+		inline virtual Color Value(float u, float v, const Point3& p) const override {
+			return colorMap[ TempColor::white ] * m_noise.Turbulence(m_scale * p);
+		}
+
+	  private:
+		float m_scale;
+		PerlinNoise m_noise;
 	};
 
 }    // namespace rmrt

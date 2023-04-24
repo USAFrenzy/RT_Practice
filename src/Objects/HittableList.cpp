@@ -5,6 +5,7 @@
 #include <RMRT/Objects/HittableList.h>
 #include <RMRT/Objects/Sphere.h>
 #include <RMRT/Textures/CheckerTexture.h>
+#include <RMRT/Textures/MarbleTexture.h>
 #include <RMRT/Textures/NoiseTexture.h>
 
 namespace rmrt {
@@ -145,9 +146,10 @@ namespace rmrt {
 
 	HittableList HittableList::TwoPerlinSpheres() {
 		HittableList objects;
-		auto perlinTexture { std::make_shared<NoiseTexture>(4.0f) };
-		objects.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, std::make_shared<LambertianMaterial>(perlinTexture)));
-		objects.Store(std::make_shared<Sphere>(Point3(0.0f, 2.0f, 0.0f), 2.0f, std::make_shared<LambertianMaterial>(perlinTexture)));
+		auto turbulentTexture { std::make_shared<TurbulentTexture>(4.0f) };
+		auto marbleTexture { std::make_shared<MarbleTexture>(4.0f) };
+		objects.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, std::make_shared<LambertianMaterial>(turbulentTexture)));
+		objects.Store(std::make_shared<Sphere>(Point3(0.0f, 2.0f, 0.0f), 2.0f, std::make_shared<LambertianMaterial>(marbleTexture)));
 		return objects;
 	}
 

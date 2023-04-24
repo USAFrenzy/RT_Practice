@@ -2,6 +2,7 @@ set(PROJECT_NAME RMRT)
 message("-- Building ${PROJECT_NAME}")
 
 set(RMRT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set(VENDOR_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/vendor)
 
 # Individual Groups Of Files
 set(RMRT_HEADERS
@@ -22,7 +23,14 @@ set(RMRT_HEADERS
     "${RMRT_INCLUDE_DIR}/RMRT/Textures/Texture.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Textures/CheckerTexture.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Textures/NoiseTexture.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Textures/MarbleTexture.h"
+    "${RMRT_INCLUDE_DIR}/RMRT/Textures/ImageTexture.h"
     "${RMRT_INCLUDE_DIR}/RMRT/Noise/Perlin.h"
+)
+
+set(VENDOR_HEADERS
+# stb image loading library
+    "${VENDOR_INCLUDE_DIR}/stb/stb_image.h"
 )
 
 set(RMRT_SOURCES 
@@ -40,6 +48,7 @@ set(RMRT_SOURCES
     "Bounds/BVH.cpp"
     "Textures/Texture.cpp"
     "Textures/CheckerTexture.cpp"
+    "Textures/ImageTexture.cpp"
     "Noise/Perlin.cpp"
 )
 
@@ -55,7 +64,7 @@ source_group(
     FILES ${RMRT_SOURCES}
 )
 
-set(RMRT_ALL_FILES ${RMRT_SOURCES} ${RMRT_HEADERS})
+set(RMRT_ALL_FILES ${RMRT_SOURCES} ${RMRT_HEADERS} ${VENDOR_HEADERS})
 
 add_library(${PROJECT_NAME} ${RMRT_ALL_FILES})
 
