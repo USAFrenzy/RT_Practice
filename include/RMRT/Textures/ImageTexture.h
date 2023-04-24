@@ -21,6 +21,7 @@ namespace rmrt {
 		int m_width;
 		int m_height;
 		int m_bytesPerScanline;
+		float m_colorScale;
 	};
 
 }    // namespace rmrt

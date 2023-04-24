@@ -13,9 +13,9 @@
 #endif
 
 namespace rmrt {
-	ImageTexture::ImageTexture(): m_data(nullptr), m_width(0), m_height(0), m_bytesPerScanline(0) { }
+	ImageTexture::ImageTexture(): m_data(nullptr), m_width(0), m_height(0), m_bytesPerScanline(0), m_colorScale(1.0f / 255.0f) { }
 
-	ImageTexture::ImageTexture(std::string_view fileName): m_data(nullptr), m_width(0), m_height(0), m_bytesPerScanline(0) {
+	ImageTexture::ImageTexture(std::string_view fileName): m_data(nullptr), m_width(0), m_height(0), m_bytesPerScanline(0), m_colorScale(1.0f / 255.0f) {
 		auto componentsPerPixel { bytesPerPixel };
 		m_data = stbi_load(fileName.data(), &m_width, &m_height, &componentsPerPixel, componentsPerPixel);
 		if( !m_data ) {
@@ -43,9 +43,8 @@ namespace rmrt {
 		if( i >= m_width ) i = m_width - 1;
 		if( j >= m_height ) j = m_height - 1;
 
-		const auto colorScale { 1.0f / 255.0f };
 		auto pixel { m_data + (j * m_bytesPerScanline) + (i * bytesPerPixel) };
-		return Color(colorScale * pixel[ 0 ], colorScale * pixel[ 1 ], colorScale * pixel[ 2 ]);
+		return Color(m_colorScale * pixel[ 0 ], m_colorScale * pixel[ 1 ], m_colorScale * pixel[ 2 ]);
 	}
 
 }    // namespace rmrt
