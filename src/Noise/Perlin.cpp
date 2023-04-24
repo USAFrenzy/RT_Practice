@@ -35,7 +35,14 @@ namespace rmrt {
 		for( int di { 0 }; di < 2; di++ ) {
 				for( int dj { 0 }; dj < 2; dj++ ) {
 						for( int dk { 0 }; dk < 2; dk++ ) {
-								c[ di ][ dj ][ dk ] = m_randVec[ m_permX[ (i + di) & 255 ] ^ m_permY[ (j + dj) & 255 ] ^ m_permZ[ (k + dk) & 255 ] ];
+								// clang-format off
+							auto index {
+								m_permX[ (i + di) & 255 ] 
+								^ m_permY[ (j + dj) & 255 ] 
+								^ m_permZ[ (k + dk) & 255 ] 
+							};
+								// clang-format on
+								c[ di ][ dj ][ dk ] = m_randVec[ index ];
 							}
 					}
 			}
