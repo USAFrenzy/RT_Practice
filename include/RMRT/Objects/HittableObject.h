@@ -16,8 +16,8 @@ namespace rmrt {
 		Vec3 normal { 0.0f, 0.0f, 0.0f };
 		std::shared_ptr<Material> materialPtr { nullptr };
 		float t { 0.0f };
-		float textureU;
-		float textureV;
+		float textureU { 0.0f };
+		float textureV { 0.0f };
 		bool frontFace { false };
 		Color emissiveColor { colorMap[ TempColor::black ] };
 

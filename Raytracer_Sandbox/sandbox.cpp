@@ -15,9 +15,11 @@
 #include <chrono>
 #include <iostream>
 
-#define TOGGLE_TRUE_SANDBOX 0
-#define TOGGLE_SCENE_ONE    0
-#define TOGGLE_SCENE_TWO    1
+#define TOGGLE_TRUE_SANDBOX      0
+#define TOGGLE_SCENE_ONE         0
+#define TOGGLE_TWO_SPHERES_SCENE 0
+#define TOGGLE_EARTH_SCENE       1
+#define TOGGLE_SCENE_TWO         0
 
 int main() {
 	using namespace rmrt;
@@ -30,6 +32,7 @@ int main() {
 	[[maybe_unused]] constexpr int fhdWidth { 1920 };                // 1080p
 	[[maybe_unused]] constexpr int qhdWidth { 2560 };                // 1440p
 	[[maybe_unused]] constexpr int uhdWidth { 3840 };                // 4k
+	[[maybe_unused]] constexpr int defaultFinalSceneWidth { 1200 };
 
 #if TOGGLE_TRUE_SANDBOX
 	// Image
@@ -89,7 +92,6 @@ int main() {
 #elif TOGGLE_SCENE_ONE
 
 	// Image
-	[[maybe_unused]] constexpr int defaultFinalSceneWidth { 1200 };
 	fileName = "Final_Scene_1.ppm";
 	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
 	image.SetRaySampleCount(500);
@@ -122,12 +124,10 @@ int main() {
 	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
 	image.PrintImageToFile();
 
-#elif TOGGLE_SCENE_TWO
+#elif TOGGLE_TWO_SPHERES_SCENE
 
 	// Image
-	[[maybe_unused]] constexpr int defaultFinalSceneWidth { 1200 };
-	//  fileName = "Final_Scene_2.ppm";
-	fileName = "Testing_Scene_2.ppm";
+	fileName = "TwoSpheres.ppm";
 	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
 	image.SetDimensions(sdWidth);
 	image.SetRaySampleCount(100);
@@ -136,8 +136,8 @@ int main() {
 	// World
 	HittableList world {};
 	// Keeping the assignment line just due to the weird issue right now of sky rendering with BVH_Node
-	// world = world.TwoPerlinSpheres();
-	world.Store(std::make_shared<BVH_Node>(world.TwoPerlinSpheres(), 0.0f, 0.0f));
+	world = world.TwoPerlinSpheres();
+	// world.Store(std::make_shared<BVH_Node>(world.TwoPerlinSpheres(), 0.0f, 0.0f));
 
 	// Camera
 	Point3 lookFrom { 13.0f, 2.0f, 3.0f };
@@ -159,6 +159,46 @@ int main() {
 	auto elapsed { std::chrono::duration_cast<std::chrono::seconds>(end - begin) };
 	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
 	image.PrintImageToFile();
+
+#elif TOGGLE_EARTH_SCENE
+
+	// TODO: Figure out why the image texture isn't mapping correctly to the sphere...
+
+	// Image
+	fileName = "EarthScene.ppm";
+	Image image(fileName, aspectRatio, defaultFinalSceneWidth);
+	image.SetDimensions(400);
+	image.SetRaySampleCount(100);
+	image.SetDiffuseRayCount(50);
+
+	// World
+	HittableList world {};
+	// Keeping the assignment line just due to the weird issue right now of sky rendering with BVH_Node
+	world = world.Earth();
+	// world.Store(std::make_shared<BVH_Node>(world.Earth(), 0.0f, 0.0f));
+
+	// Camera
+	Point3 lookFrom { 0.0f, 0.0f, 12.0f };
+	Point3 lookAt { 0.0f, 0.0f, 0.0f };
+	Vec3 vertUp { 0.0f, 1.0f, 0.0f };
+	auto depthOfField { 10.0f };
+	auto aperture { 0.0f };
+	auto fov { 20.0f };
+	auto time1 { 0.0f }, time2 { 1.0f };
+	Camera cam { lookFrom, lookAt, vertUp, fov, aspectRatio, aperture, depthOfField, time1, time2 };
+
+	// Render
+	std::cout << "\nRendering Image At: [ " << image.ImageWidth() << "x" << image.ImageHeight() << " ] To File '" << fileName << "'\n"
+			  << "Ray Samples Per Pixel : [" << image.RaySampleCount() << " ] "
+			  << "Diffuse Rays Per Pixel: [ " << image.DiffuseRayCount() << " ]\n";
+	auto begin { std::chrono::steady_clock::now() };
+	image.TraceImage(cam, world);
+	auto end { std::chrono::steady_clock::now() };
+	auto elapsed { std::chrono::duration_cast<std::chrono::seconds>(end - begin) };
+	std::cout << "Image Render Took: [ " << elapsed << " ]\n";
+	image.PrintImageToFile();
+
+#elif TOGGLE_SCENE_TWO
 
 #endif
 }

@@ -26,10 +26,10 @@ namespace rmrt {
 	}
 
 	ImageTexture::~ImageTexture() {
-		delete m_data;
+		STBI_FREE(m_data);
 	}
 
-	Color ImageTexture::Value(float u, float v, const Point3& p) const {
+	Color ImageTexture::Value(float u, float v, const Vec3& p) const {
 		// Return Cyan if no valid texture data is present
 		if( m_data == nullptr ) return Color(0.0f, 1.0f, 1.0f);
 

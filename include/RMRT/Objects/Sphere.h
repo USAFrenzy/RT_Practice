@@ -17,11 +17,24 @@ namespace rmrt {
 		const Point3& GetCenter() const;
 		void SetRadius(const float& radius);
 		const float& GetRadius() const;
-		static void SphereUV(const Point3& point, float& u, float& v);
 		bool Hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const override;
 		inline constexpr bool BoundingBox(float time0, float time1, AABB& outputBox) const override {
 			outputBox = AABB(m_center - Vec3(m_radius, m_radius, m_radius), m_center + Vec3(m_radius, m_radius, m_radius));
 			return true;
+		}
+
+	  private:
+		static void SphereUV(const Point3& point, float& u, float& v) {
+			// point -> a sphere with radius = 1 centered at the origin
+			// u -> angle around Y-axis from X=-1 clamped between [0,1]
+			// v -> angle from Y=-1 to Y=+1 clamped between [0,1]
+			//     <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+			//     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+			//     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+			auto theta { std::acos(-point.Y()) };
+			auto phi { std::atan2(-point.Z(), point.X() + pi) };
+			u = phi / (2 * pi);
+			v = theta / pi;
 		}
 
 	  private:

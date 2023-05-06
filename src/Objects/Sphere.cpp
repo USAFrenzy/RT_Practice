@@ -92,17 +92,4 @@ namespace rmrt {
 		return true;
 	}
 
-	void rmrt::Sphere::SphereUV(const Point3& point, float& u, float& v) {
-		// point -> a sphere with radius = 1 centered at the origin
-		// u -> angle around Y-axis from X=-1 clamped between [0,1]
-		// v -> angle from Y=-1 to Y=+1 clamped between [0,1]
-		//     <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
-		//     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
-		//     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
-		auto theta { acos(-point.Y()) };
-		auto phi { atan2(-point.Z(), point.X() + pi) };
-		u = phi / (2 * pi);
-		v = theta / pi;
-	}
-
 }    // namespace rmrt

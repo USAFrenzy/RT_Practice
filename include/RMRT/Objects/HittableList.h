@@ -26,6 +26,7 @@ namespace rmrt {
 		}
 		HittableList RandomScene();
 		HittableList TwoPerlinSpheres();
+		HittableList Earth();
 
 	  private:
 		HittableObjectList m_objects;

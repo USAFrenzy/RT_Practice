@@ -14,7 +14,7 @@ namespace rmrt {
 		ImageTexture(std::string_view fileName);
 		~ImageTexture();
 
-		virtual Color Value(float u, float v, const Point3& p) const override;
+		virtual Color Value(float u, float v, const Vec3& p) const override;
 
 	  private:
 		unsigned char* m_data;

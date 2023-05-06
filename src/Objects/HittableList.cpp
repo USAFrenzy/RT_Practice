@@ -5,6 +5,7 @@
 #include <RMRT/Objects/HittableList.h>
 #include <RMRT/Objects/Sphere.h>
 #include <RMRT/Textures/CheckerTexture.h>
+#include <RMRT/Textures/ImageTexture.h>
 #include <RMRT/Textures/MarbleTexture.h>
 #include <RMRT/Textures/NoiseTexture.h>
 
@@ -151,6 +152,13 @@ namespace rmrt {
 		objects.Store(std::make_shared<Sphere>(Point3(0.0f, -1000.0f, 0.0f), 1000.0f, std::make_shared<LambertianMaterial>(turbulentTexture)));
 		objects.Store(std::make_shared<Sphere>(Point3(0.0f, 2.0f, 0.0f), 2.0f, std::make_shared<LambertianMaterial>(marbleTexture)));
 		return objects;
+	}
+
+	HittableList rmrt::HittableList::Earth() {
+		auto earthTexture { std::make_shared<ImageTexture>("Resources/earthmap.jpg") };
+		auto earthSurface { std::make_shared<LambertianMaterial>(earthTexture) };
+		auto globe { std::make_shared<Sphere>(Point3(0.0f, 0.0f, 0.0f), 2.0f, earthSurface) };
+		return HittableList(globe);
 	}
 
 }    // namespace rmrt
