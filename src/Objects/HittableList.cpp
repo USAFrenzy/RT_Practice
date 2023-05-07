@@ -42,6 +42,9 @@ namespace rmrt {
 	}
 
 	bool HittableList::BoundingBox(float time0, float time1, AABB& outputBox) const {
+		
+		if( m_objects.empty() ) return false;
+		
 		AABB temp;
 		bool firstBox { true };
 		for( const auto& object: m_objects ) {

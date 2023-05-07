@@ -21,16 +21,32 @@ namespace rmrt {
 			const auto& rayOrigin { ray.Origin() };
 			const auto& rayDirection { ray.Direction() };
 			auto a { 0 };
-			for( ;; ) {
-					auto invD { 1.0f / rayDirection[ a ] };
-					auto t0 { (m_min[ a ] - rayOrigin[ a ]) * invD };
-					auto t1 { (m_max[ a ] - rayOrigin[ a ]) * invD };
-					if( invD < 0.0f ) std::swap(t0, t1);
-					tMin = t0 > tMin ? t0 : tMin;
-					tMax = t1 < tMax ? t1 : tMax;
+
+			////////////////////////////////////////////////////////////////////////////////////
+			// First Method
+			////////////////////////////////////////////////////////////////////////////////////
+			for( a; a < 3; a++ ) {
+					auto t0 = std::fmin((m_min[ a ] - rayOrigin[ a ]) / rayDirection[ a ], (m_max[ a ] - rayOrigin[ a ]) / rayDirection[ a ]);
+					auto t1 = std::fmax((m_min[ a ] - rayOrigin[ a ]) / rayDirection[ a ], (m_max[ a ] - rayOrigin[ a ]) / rayDirection[ a ]);
+					tMin    = std::fmax(t0, tMin);
+					tMax    = std::fmin(t1, tMax);
 					if( tMax <= tMin ) return false;
-					if( ++a >= 3 ) return true;
 				}
+			return true;
+
+			////////////////////////////////////////////////////////////////////////////////////
+			// Second Method
+			////////////////////////////////////////////////////////////////////////////////////
+			// for( ;; ) {
+			//		auto invD { 1.0f / rayDirection[ a ] };
+			//		auto t0 { (m_min[ a ] - rayOrigin[ a ]) * invD };
+			//		auto t1 { (m_max[ a ] - rayOrigin[ a ]) * invD };
+			//		if( invD < 0.0f ) std::swap(t0, t1);
+			//		tMin = t0 > tMin ? t0 : tMin;
+			//		tMax = t1 < tMax ? t1 : tMax;
+			//		if( tMax <= tMin ) return false;
+			//		if( ++a >= 3 ) return true;
+			//	}
 		}
 
 	  private:
