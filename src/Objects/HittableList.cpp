@@ -158,7 +158,7 @@ namespace rmrt {
 	}
 
 	HittableList rmrt::HittableList::Earth() {
-		auto earthTexture { std::make_shared<ImageTexture>("Resources/earthmap.jpg") };
+		auto earthTexture { std::make_shared<ImageTexture>("Resources/earthmap1.jpg") };
 		auto earthSurface { std::make_shared<LambertianMaterial>(earthTexture) };
 		auto globe { std::make_shared<Sphere>(Point3(0.0f, 0.0f, 0.0f), 2.0f, earthSurface) };
 		return HittableList(globe);
